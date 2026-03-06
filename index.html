@@ -8,100 +8,78 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0d1117;
-    --surface: #161b22;
-    --surface2: #1c2230;
-    --border: #21293a;
-    --text: #e6edf3;
-    --muted: #8b949e;
-    --fl: #4c7fc9;
-    --ca: #c9a84c;
-    --other: #4cc98a;
-    --o1: #7c6af5;
-    --o2: #f5a64c;
-    --o3: #4cc9b0;
-    --o4: #f56a6a;
-    --o5: #a8d44c;
+    --bg: #0d1117; --surface: #161b22; --surface2: #1c2230; --border: #21293a;
+    --text: #e6edf3; --muted: #8b949e;
+    --monroe: #f5a64c; --hellman: #7c6af5; --fl: #4c9ef5; --ca: #4cc9b0;
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
 
-  header {
-    padding: 26px 36px 18px; border-bottom: 1px solid var(--border);
-    display: flex; align-items: flex-end; justify-content: space-between;
-    background: var(--surface);
-  }
-  header h1 { font-family: 'DM Serif Display', serif; font-size: 27px; letter-spacing: -0.5px; }
-  header p { font-size: 12px; color: var(--muted); margin-top: 3px; }
-  .last-updated { font-size: 12px; color: var(--muted); background: var(--surface2); border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; }
+  header { padding:26px 36px 18px; border-bottom:1px solid var(--border); display:flex; align-items:flex-end; justify-content:space-between; background:var(--surface); }
+  header h1 { font-family:'DM Serif Display',serif; font-size:27px; letter-spacing:-0.5px; }
+  header p { font-size:12px; color:var(--muted); margin-top:3px; }
+  .last-updated { font-size:12px; color:var(--muted); background:var(--surface2); border:1px solid var(--border); padding:6px 12px; border-radius:6px; }
 
-  .filter-bar { padding: 12px 36px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); }
-  .filter-bar span { font-size: 11px; color: var(--muted); margin-right: 4px; text-transform: uppercase; letter-spacing: 0.08em; }
-  .year-btn { padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.15s; }
-  .year-btn:hover { border-color: var(--o1); color: var(--o1); }
-  .year-btn.active { background: var(--o1); color: #fff; border-color: var(--o1); font-weight: 600; }
+  .filter-bar { padding:12px 36px; display:flex; align-items:center; gap:8px; border-bottom:1px solid var(--border); }
+  .filter-bar span { font-size:11px; color:var(--muted); margin-right:4px; text-transform:uppercase; letter-spacing:0.08em; }
+  .year-btn { padding:5px 14px; border-radius:20px; border:1px solid var(--border); background:transparent; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:13px; cursor:pointer; transition:all 0.15s; }
+  .year-btn:hover { border-color:var(--hellman); color:var(--hellman); }
+  .year-btn.active { background:var(--hellman); color:#fff; border-color:var(--hellman); font-weight:600; }
 
-  .dashboard { padding: 26px 36px; display: flex; flex-direction: column; gap: 20px; max-width: 1600px; margin: 0 auto; }
+  .dashboard { padding:26px 36px; display:flex; flex-direction:column; gap:20px; max-width:1600px; margin:0 auto; }
 
-  .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
-  .kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; position: relative; overflow: hidden; }
-  .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--o1); }
-  .kpi-card.c2::before { background: var(--o2); }
-  .kpi-card.c3::before { background: var(--o3); }
-  .kpi-card.c4::before { background: var(--fl); }
-  .kpi-card.c5::before { background: var(--ca); }
-  .kpi-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 8px; }
-  .kpi-value { font-family: 'DM Serif Display', serif; font-size: 26px; line-height: 1; }
-  .kpi-sub { font-size: 11px; color: var(--muted); margin-top: 5px; }
+  /* KPI ROW */
+  .kpi-row { display:grid; grid-template-columns:repeat(6,1fr); gap:14px; }
+  .kpi-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px 20px; position:relative; overflow:hidden; }
+  .kpi-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+  .kpi-card.monroe::before { background:var(--monroe); }
+  .kpi-card.hellman::before { background:var(--hellman); }
+  .kpi-card.combined::before { background:linear-gradient(90deg,var(--monroe),var(--hellman)); }
+  .kpi-card.fl::before { background:var(--fl); }
+  .kpi-card.ca::before { background:var(--ca); }
+  .kpi-label { font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:8px; }
+  .kpi-value { font-family:'DM Serif Display',serif; font-size:24px; line-height:1; }
+  .kpi-sub { font-size:11px; color:var(--muted); margin-top:5px; }
 
-  .chart-row { display: grid; gap: 18px; }
-  .col-2 { grid-template-columns: 1fr 1fr; }
-  .col-3-1 { grid-template-columns: 3fr 1.4fr; }
+  /* CARDS & GRID */
+  .chart-row { display:grid; gap:18px; }
+  .col-2 { grid-template-columns:1fr 1fr; }
+  .col-3-1 { grid-template-columns:2.4fr 1fr; }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px 22px; }
+  .card-title { font-size:13px; font-weight:600; margin-bottom:3px; }
+  .card-sub { font-size:11px; color:var(--muted); margin-bottom:16px; }
+  .chart-wrap { position:relative; }
+  .h260 { height:260px; } .h220 { height:220px; } .h200 { height:200px; }
 
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px 22px; }
-  .card-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
-  .card-sub { font-size: 11px; color: var(--muted); margin-bottom: 16px; }
-  .chart-wrap { position: relative; }
-  .h260 { height: 260px; } .h200 { height: 200px; } .h240 { height: 240px; }
+  .legend { display:flex; flex-wrap:wrap; gap:14px; margin-bottom:14px; }
+  .legend-item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted); }
+  .ldot { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
 
-  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 14px; }
-  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); }
-  .ldot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+  /* COMPARISON TABLE */
+  .cmp-table { width:100%; border-collapse:collapse; font-size:12px; }
+  .cmp-table th { text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); padding:0 0 8px; border-bottom:1px solid var(--border); font-weight:500; }
+  .cmp-table th:nth-child(2), .cmp-table th:nth-child(3) { text-align:right; }
+  .cmp-table td { padding:7px 0; border-bottom:1px solid rgba(33,41,58,0.5); vertical-align:middle; font-size:12px; }
+  .cmp-table td:nth-child(2), .cmp-table td:nth-child(3) { text-align:right; font-weight:600; font-size:13px; }
+  .cmp-table tr:last-child td { border-bottom:none; }
+  .bar-bg { background:var(--surface2); border-radius:2px; height:3px; margin-top:3px; }
+  .bar-m { height:3px; border-radius:2px; background:var(--monroe); }
+  .bar-h { height:3px; border-radius:2px; background:var(--hellman); }
 
-  .owner-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
-  .owner-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; border-left: 3px solid var(--o1); }
-  .owner-card.oc2 { border-left-color: var(--o2); }
-  .owner-card.oc3 { border-left-color: var(--o3); }
-  .owner-card.oc4 { border-left-color: var(--o4); }
-  .owner-card.oc5 { border-left-color: var(--o5); }
-  .owner-name { font-size: 11px; color: var(--muted); margin-bottom: 6px; line-height: 1.4; }
-  .owner-val { font-family: 'DM Serif Display', serif; font-size: 22px; }
-  .owner-pct { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  /* YEAR SUMMARY CARDS */
+  .year-summary { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .yr-card { background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:16px 18px; }
+  .yr-label { font-size:12px; font-weight:600; color:var(--muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.06em; }
+  .yr-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:7px; font-size:12px; }
+  .yr-name { display:flex; align-items:center; gap:7px; color:var(--muted); }
+  .yr-val { font-weight:600; }
+  .yr-divider { border:none; border-top:1px solid var(--border); margin:8px 0; }
+  .yr-total { display:flex; justify-content:space-between; font-size:13px; font-weight:600; }
 
-  .prop-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  .prop-table th { text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding: 0 0 8px; border-bottom: 1px solid var(--border); font-weight: 500; }
-  .prop-table th:nth-child(2) { text-align: center; }
-  .prop-table th:last-child { text-align: right; }
-  .prop-table td { padding: 7px 0; border-bottom: 1px solid rgba(33,41,58,0.5); vertical-align: middle; }
-  .prop-table td:nth-child(2) { text-align: center; }
-  .prop-table td:last-child { text-align: right; font-weight: 600; font-size: 13px; }
-  .prop-table tr:last-child td { border-bottom: none; }
-  .owner-tag { display: inline-block; font-size: 9px; padding: 2px 6px; border-radius: 3px; font-weight: 600; letter-spacing: 0.03em; white-space: nowrap; }
-  .bar-bg { background: var(--surface2); border-radius: 2px; height: 3px; margin-top: 3px; }
-  .bar-fill { height: 3px; border-radius: 2px; }
+  footer { text-align:center; padding:18px; font-size:11px; color:var(--muted); border-top:1px solid var(--border); }
 
-  footer { text-align: center; padding: 18px; font-size: 11px; color: var(--muted); border-top: 1px solid var(--border); }
-
-  @media (max-width: 1100px) {
-    .kpi-row, .owner-grid { grid-template-columns: repeat(3, 1fr); }
-    .col-3-1, .col-2 { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 700px) {
-    .dashboard { padding: 14px; }
-    header { padding: 14px; flex-direction: column; align-items: flex-start; gap: 8px; }
-    .kpi-row, .owner-grid { grid-template-columns: 1fr 1fr; }
-    .filter-bar { padding: 10px 14px; flex-wrap: wrap; }
-  }
+  @media (max-width:1100px) { .kpi-row { grid-template-columns:repeat(3,1fr); } .col-3-1,.col-2 { grid-template-columns:1fr; } .year-summary { grid-template-columns:1fr 1fr; } }
+  @media (max-width:700px) { .dashboard { padding:14px; } header { padding:14px; flex-direction:column; align-items:flex-start; gap:8px; } .kpi-row { grid-template-columns:1fr 1fr; } .filter-bar { padding:10px 14px; flex-wrap:wrap; } }
 </style>
 </head>
 <body>
@@ -109,7 +87,7 @@
 <header>
   <div>
     <h1>Distribution Tracker</h1>
-    <p>Real Estate Investment Group — Global Portfolio · 2024 onwards</p>
+    <p>Monroe &amp; Hellman — Portfolio Distributions · 2024 onwards</p>
   </div>
   <div id="lastUpdated" class="last-updated">Last entry: —</div>
 </header>
@@ -124,109 +102,110 @@
 
 <div class="dashboard">
 
+  <!-- KPI ROW -->
   <div class="kpi-row">
-    <div class="kpi-card">
-      <div class="kpi-label">Total Distributed</div>
-      <div class="kpi-value" id="kpiTotal">—</div>
-      <div class="kpi-sub" id="kpiTotalSub"></div>
+    <div class="kpi-card monroe">
+      <div class="kpi-label">Monroe Total</div>
+      <div class="kpi-value" id="kpiMonroe">—</div>
+      <div class="kpi-sub" id="kpiMonroePct"></div>
     </div>
-    <div class="kpi-card c2">
+    <div class="kpi-card monroe">
+      <div class="kpi-label">Monroe Monthly Avg</div>
+      <div class="kpi-value" id="kpiMonroeAvg">—</div>
+      <div class="kpi-sub">per month</div>
+    </div>
+    <div class="kpi-card hellman">
+      <div class="kpi-label">Hellman Total</div>
+      <div class="kpi-value" id="kpiHellman">—</div>
+      <div class="kpi-sub" id="kpiHellmanPct"></div>
+    </div>
+    <div class="kpi-card hellman">
+      <div class="kpi-label">Hellman Monthly Avg</div>
+      <div class="kpi-value" id="kpiHellmanAvg">—</div>
+      <div class="kpi-sub">per month</div>
+    </div>
+    <div class="kpi-card fl">
       <div class="kpi-label">Florida Total</div>
       <div class="kpi-value" id="kpiFL">—</div>
       <div class="kpi-sub" id="kpiFLPct"></div>
     </div>
-    <div class="kpi-card c3">
+    <div class="kpi-card ca">
       <div class="kpi-label">California Total</div>
       <div class="kpi-value" id="kpiCA">—</div>
       <div class="kpi-sub" id="kpiFLCAPct"></div>
     </div>
-    <div class="kpi-card c4">
-      <div class="kpi-label">Monthly Average</div>
-      <div class="kpi-value" id="kpiAvg">—</div>
-      <div class="kpi-sub">per month</div>
-    </div>
-    <div class="kpi-card c5">
-      <div class="kpi-label">Peak Month</div>
-      <div class="kpi-value" id="kpiPeak">—</div>
-      <div class="kpi-sub" id="kpiPeakDate"></div>
-    </div>
   </div>
 
-  <!-- OWNERSHIP KPI -->
-  <div class="card">
-    <div class="card-title">Distributions by Ownership Group</div>
-    <div class="card-sub">Totals for selected period across all 5 ownership structures</div>
-    <div class="owner-grid" id="ownerGrid"></div>
-  </div>
-
-  <!-- MAIN STACKED CHART + OWNER DONUT -->
+  <!-- MAIN CHART + DONUT -->
   <div class="chart-row col-3-1">
     <div class="card">
-      <div class="card-title">Monthly Distributions — by Ownership Group</div>
-      <div class="card-sub">Stacked monthly view showing each ownership group's contribution</div>
+      <div class="card-title">Monthly Distributions — Monroe vs. Hellman</div>
+      <div class="card-sub">Stacked monthly view of each partner's distributions</div>
       <div class="legend">
-        <div class="legend-item"><div class="ldot" style="background:var(--o1)"></div>Monroe / Hellman</div>
-        <div class="legend-item"><div class="ldot" style="background:var(--o2)"></div>Monroe</div>
-        <div class="legend-item"><div class="ldot" style="background:var(--o3)"></div>Monroe / Witt</div>
-        <div class="legend-item"><div class="ldot" style="background:var(--o4)"></div>Monroe / Martinez</div>
-        <div class="legend-item"><div class="ldot" style="background:var(--o5)"></div>Monroe / Hellman / Martinez</div>
+        <div class="legend-item"><div class="ldot" style="background:var(--monroe)"></div>Monroe</div>
+        <div class="legend-item"><div class="ldot" style="background:var(--hellman)"></div>Hellman</div>
       </div>
-      <div class="chart-wrap h260"><canvas id="ownerStackChart"></canvas></div>
+      <div class="chart-wrap h260"><canvas id="stackChart"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-title">Ownership Share</div>
-      <div class="card-sub">% of total for selected period</div>
-      <div class="chart-wrap h240"><canvas id="ownerDonut"></canvas></div>
-      <div id="ownerDonutLegend" style="margin-top:12px;display:flex;flex-direction:column;gap:7px;"></div>
+      <div class="card-title">Split</div>
+      <div class="card-sub">Monroe vs. Hellman share for selected period</div>
+      <div class="chart-wrap h220"><canvas id="splitDonut"></canvas></div>
+      <div id="donutLegend" style="margin-top:14px;display:flex;flex-direction:column;gap:8px;"></div>
     </div>
   </div>
 
-  <!-- REGION TREND + ANNUAL -->
+  <!-- TREND LINES + ANNUAL SUMMARY -->
   <div class="chart-row col-2">
     <div class="card">
+      <div class="card-title">Monroe vs. Hellman — Monthly Trend</div>
+      <div class="card-sub">Individual distribution amounts over time</div>
+      <div class="legend">
+        <div class="legend-item"><div class="ldot" style="background:var(--monroe)"></div>Monroe</div>
+        <div class="legend-item"><div class="ldot" style="background:var(--hellman)"></div>Hellman</div>
+      </div>
+      <div class="chart-wrap h200"><canvas id="trendLine"></canvas></div>
+    </div>
+    <div class="card">
       <div class="card-title">Florida vs. California — Monthly Trend</div>
-      <div class="card-sub">Regional distribution comparison over time</div>
+      <div class="card-sub">Regional breakdown over time</div>
       <div class="legend">
         <div class="legend-item"><div class="ldot" style="background:var(--fl)"></div>Florida</div>
         <div class="legend-item"><div class="ldot" style="background:var(--ca)"></div>California</div>
-        <div class="legend-item"><div class="ldot" style="background:var(--other)"></div>Other</div>
       </div>
       <div class="chart-wrap h200"><canvas id="regionLine"></canvas></div>
     </div>
-    <div class="card">
-      <div class="card-title">Annual Totals (2024+)</div>
-      <div class="card-sub">Year-over-year comparison</div>
-      <div class="chart-wrap h200"><canvas id="annualBar"></canvas></div>
-    </div>
   </div>
 
-  <!-- PROPERTY TABLE -->
+  <!-- ANNUAL YEAR CARDS -->
   <div class="card">
-    <div class="card-title">All Properties — Ranked by Total Distributions</div>
-    <div class="card-sub">2024 onwards · includes ownership group for each property</div>
+    <div class="card-title">Annual Summary</div>
+    <div class="card-sub">Monroe and Hellman totals by year</div>
+    <div class="year-summary" id="yearSummary"></div>
+  </div>
+
+  <!-- MONTHLY COMPARISON TABLE -->
+  <div class="card">
+    <div class="card-title">Month-by-Month Breakdown</div>
+    <div class="card-sub">Monroe and Hellman distributions for each month — selected period</div>
     <div style="overflow-x:auto;">
-      <table class="prop-table" id="propTable">
-        <thead><tr><th style="width:45%">Property</th><th>Ownership</th><th>Total Distributed</th></tr></thead>
+      <table class="cmp-table" id="cmpTable">
+        <thead><tr><th style="width:30%">Month</th><th>Monroe</th><th>Hellman</th><th style="text-align:right">Combined</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
   </div>
 
 </div>
-<footer>Distribution Tracker Dashboard · Global Distribution Tracker tab · Data from 2024 onwards</footer>
+<footer>Distribution Tracker Dashboard · Monroe &amp; Hellman · Data from 2024 onwards</footer>
 
 <script>
-const RAW = {"monthly": [{"date": "2024-01", "total": 95416.67, "fl_apt": 32250.0, "fl_other": 0, "fl_total": 32250.0, "ca_mhp": 63166.67, "ca_other": 0, "ca_total": 63166.67, "other": 0, "by_owner": {"Monroe / Hellman": 35750.0, "Monroe": 37166.67, "Monroe / Witt": 22500.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 0}}, {"date": "2024-02", "total": 115416.67, "fl_apt": 36500.0, "fl_other": 0, "fl_total": 36500.0, "ca_mhp": 78916.67, "ca_other": 0, "ca_total": 78916.67, "other": 0, "by_owner": {"Monroe / Hellman": 35750.0, "Monroe": 57166.67, "Monroe / Witt": 22500.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 0}}, {"date": "2024-03", "total": 126666.67, "fl_apt": 37000.0, "fl_other": 0, "fl_total": 37000.0, "ca_mhp": 79666.67, "ca_other": 10000.0, "ca_total": 89666.67, "other": 0, "by_owner": {"Monroe / Hellman": 39000.0, "Monroe": 55166.67, "Monroe / Witt": 22500.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 10000.0}}, {"date": "2024-04", "total": 113666.67, "fl_apt": 28000.0, "fl_other": 0, "fl_total": 28000.0, "ca_mhp": 85666.67, "ca_other": 0, "ca_total": 85666.67, "other": 0, "by_owner": {"Monroe / Hellman": 30000.0, "Monroe": 61166.67, "Monroe / Witt": 22500.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 0}}, {"date": "2024-05", "total": 117916.67, "fl_apt": 30000.0, "fl_other": 0, "fl_total": 30000.0, "ca_mhp": 87916.67, "ca_other": 0, "ca_total": 87916.67, "other": 0, "by_owner": {"Monroe / Hellman": 38750.0, "Monroe": 56666.67, "Monroe / Witt": 22500.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 0}}, {"date": "2024-06", "total": 135666.67, "fl_apt": 30000.0, "fl_other": 0, "fl_total": 30000.0, "ca_mhp": 95666.67, "ca_other": 10000.0, "ca_total": 105666.67, "other": 0, "by_owner": {"Monroe / Hellman": 45000.0, "Monroe": 58166.67, "Monroe / Witt": 22500.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 10000.0}}, {"date": "2024-07", "total": 152666.67, "fl_apt": 29000.0, "fl_other": 0, "fl_total": 29000.0, "ca_mhp": 123666.67, "ca_other": 0, "ca_total": 123666.67, "other": 0, "by_owner": {"Monroe / Hellman": 41000.0, "Monroe": 89166.67, "Monroe / Witt": 22500.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 0}}, {"date": "2024-08", "total": 128416.67, "fl_apt": 31000.0, "fl_other": 0, "fl_total": 31000.0, "ca_mhp": 97416.67, "ca_other": 0, "ca_total": 97416.67, "other": 0, "by_owner": {"Monroe / Hellman": 41750.0, "Monroe": 64166.67, "Monroe / Witt": 22500.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 0}}, {"date": "2024-09", "total": 146158.67, "fl_apt": 31000.0, "fl_other": 0, "fl_total": 31000.0, "ca_mhp": 105158.67, "ca_other": 10000.0, "ca_total": 115158.67, "other": 0, "by_owner": {"Monroe / Hellman": 45000.0, "Monroe": 58666.67, "Monroe / Witt": 22500.0, "Monroe / Martinez": 9992.0, "Monroe / Hellman / Martinez": 10000.0}}, {"date": "2024-10", "total": 130184.91, "fl_apt": 20000.0, "fl_other": 0, "fl_total": 20000.0, "ca_mhp": 110184.91, "ca_other": 0, "ca_total": 110184.91, "other": 0, "by_owner": {"Monroe / Hellman": 45018.24, "Monroe": 62666.67, "Monroe / Witt": 22500.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 0}}, {"date": "2024-11", "total": 126666.67, "fl_apt": 27500.0, "fl_other": 0, "fl_total": 27500.0, "ca_mhp": 99166.67, "ca_other": 0, "ca_total": 99166.67, "other": 0, "by_owner": {"Monroe / Hellman": 50000.0, "Monroe": 54166.67, "Monroe / Witt": 22500.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 0}}, {"date": "2024-12", "total": 206662.67, "fl_apt": 31000.0, "fl_other": 0, "fl_total": 31000.0, "ca_mhp": 166662.67, "ca_other": 9000.0, "ca_total": 175662.67, "other": 0, "by_owner": {"Monroe / Hellman": 40250.0, "Monroe": 64916.67, "Monroe / Witt": 87500.0, "Monroe / Martinez": 4996.0, "Monroe / Hellman / Martinez": 9000.0}}, {"date": "2025-01", "total": 102666.67, "fl_apt": 30500.0, "fl_other": 0, "fl_total": 30500.0, "ca_mhp": 72166.67, "ca_other": 0, "ca_total": 72166.67, "other": 0, "by_owner": {"Monroe / Hellman": 54000.0, "Monroe": 26166.67, "Monroe / Witt": 22500.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 0}}, {"date": "2025-02", "total": 126166.67, "fl_apt": 34000.0, "fl_other": 0, "fl_total": 34000.0, "ca_mhp": 92166.67, "ca_other": 0, "ca_total": 92166.67, "other": 0, "by_owner": {"Monroe / Hellman": 52500.0, "Monroe": 48666.67, "Monroe / Witt": 25000.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 0}}, {"date": "2025-03", "total": 124116.97, "fl_apt": 33000.0, "fl_other": 1700.3, "fl_total": 34700.3, "ca_mhp": 89416.67, "ca_other": 0, "ca_total": 89416.67, "other": 0, "by_owner": {"Monroe / Hellman": 49950.3, "Monroe": 49166.67, "Monroe / Witt": 25000.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 0}}, {"date": "2025-04", "total": 139239.17, "fl_apt": 29500.0, "fl_other": 1700.3, "fl_total": 31200.3, "ca_mhp": 99538.87, "ca_other": 8500.0, "ca_total": 108038.87, "other": 0, "by_owner": {"Monroe / Hellman": 47075.3, "Monroe": 55166.67, "Monroe / Witt": 25000.0, "Monroe / Martinez": 3497.2, "Monroe / Hellman / Martinez": 8500.0}}, {"date": "2025-05", "total": 123866.97, "fl_apt": 28500.0, "fl_other": 2700.3, "fl_total": 31200.3, "ca_mhp": 92666.67, "ca_other": 0, "ca_total": 92666.67, "other": 0, "by_owner": {"Monroe / Hellman": 52200.3, "Monroe": 46666.67, "Monroe / Witt": 25000.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 0}}, {"date": "2025-06", "total": 126381.22, "fl_apt": 30500.0, "fl_other": 1214.55, "fl_total": 31714.55, "ca_mhp": 94666.67, "ca_other": 0, "ca_total": 94666.67, "other": 0, "by_owner": {"Monroe / Hellman": 48214.55, "Monroe": 53166.67, "Monroe / Witt": 25000.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 0}}, {"date": "2025-07", "total": 135131.22, "fl_apt": 35000.0, "fl_other": 1214.55, "fl_total": 36214.55, "ca_mhp": 92916.67, "ca_other": 6000.0, "ca_total": 98916.67, "other": 0, "by_owner": {"Monroe / Hellman": 46964.55, "Monroe": 57166.67, "Monroe / Witt": 25000.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 6000.0}}, {"date": "2025-08", "total": 125881.22, "fl_apt": 29000.0, "fl_other": 1214.55, "fl_total": 30214.55, "ca_mhp": 95666.67, "ca_other": 0, "ca_total": 95666.67, "other": 0, "by_owner": {"Monroe / Hellman": 50714.55, "Monroe": 50166.67, "Monroe / Witt": 25000.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 0}}, {"date": "2025-09", "total": 138881.22, "fl_apt": 33000.0, "fl_other": 1214.55, "fl_total": 34214.55, "ca_mhp": 104666.67, "ca_other": 0, "ca_total": 104666.67, "other": 0, "by_owner": {"Monroe / Hellman": 56214.55, "Monroe": 57666.67, "Monroe / Witt": 25000.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 0}}, {"date": "2025-10", "total": 168906.22, "fl_apt": 26000.0, "fl_other": 1214.55, "fl_total": 27214.55, "ca_mhp": 134191.67, "ca_other": 7500.0, "ca_total": 141691.67, "other": 0, "by_owner": {"Monroe / Hellman": 48839.55, "Monroe": 87566.67, "Monroe / Witt": 25000.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 7500.0}}, {"date": "2025-11", "total": 139495.59, "fl_apt": 31750.0, "fl_other": 1578.92, "fl_total": 33328.92, "ca_mhp": 106166.67, "ca_other": 0, "ca_total": 106166.67, "other": 0, "by_owner": {"Monroe / Hellman": 54578.92, "Monroe": 59916.67, "Monroe / Witt": 25000.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 0}}, {"date": "2025-12", "total": 319745.59, "fl_apt": 27250.0, "fl_other": 1578.92, "fl_total": 28828.92, "ca_mhp": 290916.67, "ca_other": 0, "ca_total": 290916.67, "other": 0, "by_owner": {"Monroe / Hellman": 55578.92, "Monroe": 79166.67, "Monroe / Witt": 185000.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 0}}, {"date": "2026-01", "total": 178788.84, "fl_apt": 29500.0, "fl_other": 2700.37, "fl_total": 32200.37, "ca_mhp": 139588.47, "ca_other": 7000.0, "ca_total": 146588.47, "other": 0, "by_owner": {"Monroe / Hellman": 58700.37, "Monroe": 84091.67, "Monroe / Witt": 25000.0, "Monroe / Martinez": 3996.8, "Monroe / Hellman / Martinez": 7000.0}}, {"date": "2026-02", "total": 171818.04, "fl_apt": 28000.0, "fl_other": 2700.37, "fl_total": 30700.37, "ca_mhp": 106416.67, "ca_other": 0, "ca_total": 106416.67, "other": 34701.0, "by_owner": {"Monroe / Hellman": 85651.37, "Monroe": 61166.67, "Monroe / Witt": 25000.0, "Monroe / Martinez": 0, "Monroe / Hellman / Martinez": 0}}], "props": {"Terrace Gardens / TGV": {"total": 492500.0, "owner": "Monroe / Witt"}, "Bardmoor Pointe / Semvil": {"total": 472000.0, "owner": "Monroe / Hellman"}, "Allston Lakes / Allston Lakes": {"total": 367500.0, "owner": "Monroe"}, "Apple Valley Lodge / AVE": {"total": 350000.0, "owner": "Monroe / Witt"}, "Desert Palms / Milana 8": {"total": 265000.0, "owner": "Monroe"}, "Roma / Milana 4": {"total": 255000.0, "owner": "Monroe / Hellman"}, "Sunny Skies / Mariol": {"total": 248300.0, "owner": "Monroe / Hellman"}, "El Rancho / Karma": {"total": 209950.0, "owner": "Monroe / Hellman"}, "Pioneer / Milana 2": {"total": 197250.0, "owner": "Monroe"}, "Mountain View / KymChi": {"total": 189337.5, "owner": "Monroe / Hellman"}, "Orange Grove / The OG": {"total": 188325.0, "owner": "Monroe / Hellman"}, "Roadrunner / Milana 3": {"total": 185000.0, "owner": "Monroe / Hellman"}, "Air Lane / December 2nd": {"total": 171500.0, "owner": "Monroe / Hellman"}, "Foothill Mobile Home Park / FMHP": {"total": 168000.0, "owner": "Monroe / Hellman"}, "Emerald Oasis / Roseian 3": {"total": 157500.0, "owner": "Monroe"}, "Terra Nova / Roseian 1": {"total": 134000.0, "owner": "Monroe"}, "Apple Valley / Milana 1": {"total": 129500.0, "owner": "Monroe"}, "Rosamond / Milana 7": {"total": 129500.0, "owner": "Monroe"}, "Clear Skies / Malka": {"total": 124250.0, "owner": "Monroe / Hellman"}, "Desert Winds / Boujie": {"total": 108333.42, "owner": "Monroe"}, "Julia Court Cottages / Julia Court": {"total": 103500.0, "owner": "Monroe / Hellman"}, "Pack Rat / North Hollywood": {"total": 96900.0, "owner": "Monroe / Hellman / Martinez"}, "Car Wash - Hawthorne": {"total": 70269.53, "owner": "Monroe / Hellman"}, "Sawgrass / Brickellbody": {"total": 47764.0, "owner": "Monroe / Hellman"}, "Sunnydale / Alarose": {"total": 35907.75, "owner": "Monroe / Hellman"}, "Highlander / Milana 5": {"total": 33000.0, "owner": "Monroe"}, "West Way / Darby 54": {"total": 23044.05, "owner": "Monroe / Martinez"}, "Metrolink / Milana 9": {"total": 21000.0, "owner": "Monroe"}, "Palm Vista / Alarose": {"total": 18186.48, "owner": "Monroe / Hellman"}, "Country Squire / Wendy Rose": {"total": 16500.0, "owner": "Monroe / Hellman"}, "AV Ranchos / Ottawa Jr": {"total": 7428.75, "owner": "Monroe"}, "Social House / CLP One": {"total": 3150.0, "owner": "Monroe"}}};
+const RAW = {"monthly": [{"date": "2024-01", "monroe": 95416.67, "hellman": 35750.0, "total": 131166.67, "fl_total": 32250.0, "ca_total": 63166.67, "other": 0}, {"date": "2024-02", "monroe": 115416.67, "hellman": 35750.0, "total": 151166.67, "fl_total": 36500.0, "ca_total": 78916.67, "other": 0}, {"date": "2024-03", "monroe": 126666.67, "hellman": 43000.0, "total": 169666.67, "fl_total": 37000.0, "ca_total": 89666.67, "other": 0}, {"date": "2024-04", "monroe": 113666.67, "hellman": 30000.0, "total": 143666.67, "fl_total": 28000.0, "ca_total": 85666.67, "other": 0}, {"date": "2024-05", "monroe": 117916.67, "hellman": 38750.0, "total": 156666.67, "fl_total": 30000.0, "ca_total": 87916.67, "other": 0}, {"date": "2024-06", "monroe": 135666.67, "hellman": 49000.0, "total": 184666.67, "fl_total": 30000.0, "ca_total": 105666.67, "other": 0}, {"date": "2024-07", "monroe": 152666.67, "hellman": 41000.0, "total": 193666.67, "fl_total": 29000.0, "ca_total": 123666.67, "other": 0}, {"date": "2024-08", "monroe": 128416.67, "hellman": 41750.0, "total": 170166.67, "fl_total": 31000.0, "ca_total": 97416.67, "other": 0}, {"date": "2024-09", "monroe": 146158.67, "hellman": 49000.0, "total": 195158.67, "fl_total": 31000.0, "ca_total": 115158.67, "other": 0}, {"date": "2024-10", "monroe": 130184.91, "hellman": 45018.24, "total": 175203.15, "fl_total": 20000.0, "ca_total": 110184.91, "other": 0}, {"date": "2024-11", "monroe": 126666.67, "hellman": 50000.0, "total": 176666.67, "fl_total": 27500.0, "ca_total": 99166.67, "other": 0}, {"date": "2024-12", "monroe": 206662.67, "hellman": 43850.0, "total": 250512.67, "fl_total": 31000.0, "ca_total": 175662.67, "other": 0}, {"date": "2025-01", "monroe": 102666.67, "hellman": 54000.0, "total": 156666.67, "fl_total": 30500.0, "ca_total": 72166.67, "other": 0}, {"date": "2025-02", "monroe": 126166.67, "hellman": 52500.0, "total": 178666.67, "fl_total": 34000.0, "ca_total": 92166.67, "other": 0}, {"date": "2025-03", "monroe": 124116.97, "hellman": 49950.3, "total": 174067.27, "fl_total": 34700.3, "ca_total": 89416.67, "other": 0}, {"date": "2025-04", "monroe": 139239.17, "hellman": 50475.3, "total": 189714.47, "fl_total": 31200.3, "ca_total": 108038.87, "other": 0}, {"date": "2025-05", "monroe": 123866.97, "hellman": 52200.3, "total": 176067.27, "fl_total": 31200.3, "ca_total": 92666.67, "other": 0}, {"date": "2025-06", "monroe": 126381.22, "hellman": 48214.55, "total": 174595.77, "fl_total": 31714.55, "ca_total": 94666.67, "other": 0}, {"date": "2025-07", "monroe": 135131.22, "hellman": 49364.55, "total": 184495.77, "fl_total": 36214.55, "ca_total": 98916.67, "other": 0}, {"date": "2025-08", "monroe": 125881.22, "hellman": 50714.55, "total": 176595.77, "fl_total": 30214.55, "ca_total": 95666.67, "other": 0}, {"date": "2025-09", "monroe": 138881.22, "hellman": 56214.55, "total": 195095.77, "fl_total": 34214.55, "ca_total": 104666.67, "other": 0}, {"date": "2025-10", "monroe": 168906.22, "hellman": 51839.55, "total": 220745.77, "fl_total": 27214.55, "ca_total": 141691.67, "other": 0}, {"date": "2025-11", "monroe": 139495.59, "hellman": 54578.92, "total": 194074.51, "fl_total": 33328.92, "ca_total": 106166.67, "other": 0}, {"date": "2025-12", "monroe": 319745.59, "hellman": 55578.92, "total": 375324.51, "fl_total": 28828.92, "ca_total": 290916.67, "other": 0}, {"date": "2026-01", "monroe": 178788.84, "hellman": 61500.37, "total": 240289.21, "fl_total": 32200.37, "ca_total": 146588.47, "other": 0}, {"date": "2026-02", "monroe": 171818.04, "hellman": 85651.37, "total": 257469.41, "fl_total": 30700.37, "ca_total": 106416.67, "other": 34701.0}]};
 
-const OWNERS = ['Monroe / Hellman','Monroe','Monroe / Witt','Monroe / Martinez','Monroe / Hellman / Martinez'];
-const OC = {'Monroe / Hellman':'#7c6af5','Monroe':'#f5a64c','Monroe / Witt':'#4cc9b0','Monroe / Martinez':'#f56a6a','Monroe / Hellman / Martinez':'#a8d44c'};
-const OCC = {'Monroe / Hellman':'','Monroe':'oc2','Monroe / Witt':'oc3','Monroe / Martinez':'oc4','Monroe / Hellman / Martinez':'oc5'};
-const OBGC = {'Monroe / Hellman':'rgba(124,106,245,0.13)','Monroe':'rgba(245,166,76,0.13)','Monroe / Witt':'rgba(76,201,176,0.13)','Monroe / Martinez':'rgba(245,106,106,0.13)','Monroe / Hellman / Martinez':'rgba(168,212,76,0.13)'};
-
+const MC = '#f5a64c', HC = '#7c6af5', FLC = '#4c9ef5', CAC = '#4cc9b0';
 const fmt = n => { if(n>=1e6) return '$'+(n/1e6).toFixed(2)+'M'; if(n>=1e3) return '$'+(n/1e3).toFixed(1)+'K'; return '$'+n.toFixed(0); };
 const fmtFull = n => '$'+n.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
-
-const filter = year => year==='all' ? RAW.monthly : RAW.monthly.filter(r=>r.date.startsWith(year));
+const filter = yr => yr==='all' ? RAW.monthly : RAW.monthly.filter(r=>r.date.startsWith(yr));
 
 let CH = {};
 const BS = {
@@ -235,138 +214,139 @@ const BS = {
 };
 const BT = {backgroundColor:'#1c2230',borderColor:'#21293a',borderWidth:1,titleColor:'#e6edf3',bodyColor:'#8b949e',padding:10};
 
-function buildOwnerStack(data) {
-  const ctx = document.getElementById('ownerStackChart').getContext('2d');
-  if(CH.os) CH.os.destroy();
-  CH.os = new Chart(ctx, {
+function buildStack(data) {
+  const ctx = document.getElementById('stackChart').getContext('2d');
+  if(CH.s) CH.s.destroy();
+  CH.s = new Chart(ctx, {
     type:'bar',
     data:{
       labels:data.map(r=>r.date),
-      datasets:OWNERS.map(o=>({
-        label:o, data:data.map(r=>r.by_owner[o]||0),
-        backgroundColor:OC[o]+'bb', borderColor:OC[o], borderWidth:0.5, stack:'s'
-      }))
+      datasets:[
+        {label:'Monroe',data:data.map(r=>r.monroe),backgroundColor:MC+'bb',borderColor:MC,borderWidth:0.5,stack:'s'},
+        {label:'Hellman',data:data.map(r=>r.hellman),backgroundColor:HC+'bb',borderColor:HC,borderWidth:0.5,stack:'s'}
+      ]
     },
     options:{
-      responsive:true, maintainAspectRatio:false,
+      responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{...BT,callbacks:{
         title:i=>i[0].label,
         label:c=>' '+c.dataset.label+': '+fmtFull(c.raw),
-        footer:items=>'Total: '+fmtFull(items.reduce((s,i)=>s+i.raw,0))
+        footer:items=>'Combined: '+fmtFull(items.reduce((s,i)=>s+i.raw,0))
       }}},
       scales:BS
     }
   });
 }
 
-function buildOwnerDonut(data) {
-  const ctx = document.getElementById('ownerDonut').getContext('2d');
-  if(CH.od) CH.od.destroy();
-  const totals = OWNERS.map(o=>data.reduce((s,r)=>s+(r.by_owner[o]||0),0));
-  const grand = totals.reduce((a,b)=>a+b,0);
-  CH.od = new Chart(ctx, {
+function buildDonut(data) {
+  const ctx = document.getElementById('splitDonut').getContext('2d');
+  if(CH.d) CH.d.destroy();
+  const mTotal = data.reduce((s,r)=>s+r.monroe,0);
+  const hTotal = data.reduce((s,r)=>s+r.hellman,0);
+  const grand = mTotal + hTotal;
+  CH.d = new Chart(ctx, {
     type:'doughnut',
-    data:{labels:OWNERS,datasets:[{data:totals,backgroundColor:OWNERS.map(o=>OC[o]+'bb'),borderColor:OWNERS.map(o=>OC[o]),borderWidth:1.5,hoverOffset:6}]},
+    data:{labels:['Monroe','Hellman'],datasets:[{data:[mTotal,hTotal],backgroundColor:[MC+'bb',HC+'bb'],borderColor:[MC,HC],borderWidth:1.5,hoverOffset:6}]},
     options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{...BT,callbacks:{label:c=>' '+c.label+': '+fmtFull(c.raw)+' ('+(c.raw/grand*100).toFixed(1)+'%)'}}}}
   });
-  document.getElementById('ownerDonutLegend').innerHTML = OWNERS.map((o,i)=>`
+  document.getElementById('donutLegend').innerHTML = [['Monroe',mTotal,MC],['Hellman',hTotal,HC]].map(([name,val,c])=>`
     <div style="display:flex;justify-content:space-between;align-items:center">
-      <div style="display:flex;align-items:center;gap:7px">
-        <div style="width:8px;height:8px;border-radius:2px;background:${OC[o]}"></div>
-        <span style="color:#8b949e;font-size:11px">${o}</span>
-      </div>
-      <span style="font-size:12px;font-weight:600">${grand>0?(totals[i]/grand*100).toFixed(1):'0'}%</span>
+      <div style="display:flex;align-items:center;gap:7px"><div style="width:8px;height:8px;border-radius:2px;background:${c}"></div><span style="color:#8b949e;font-size:11px">${name}</span></div>
+      <span style="font-size:12px;font-weight:600">${fmtFull(val)} <span style="color:#8b949e;font-weight:400">(${grand>0?(val/grand*100).toFixed(1):0}%)</span></span>
     </div>`).join('');
 }
 
-function buildRegionLine(data) {
-  const ctx = document.getElementById('regionLine').getContext('2d');
-  if(CH.rl) CH.rl.destroy();
-  CH.rl = new Chart(ctx, {
+function buildTrend(data) {
+  const ctx = document.getElementById('trendLine').getContext('2d');
+  if(CH.t) CH.t.destroy();
+  CH.t = new Chart(ctx, {
     type:'line',
     data:{
       labels:data.map(r=>r.date),
       datasets:[
-        {label:'Florida',data:data.map(r=>r.fl_total),borderColor:'#4c7fc9',backgroundColor:'rgba(76,127,201,0.07)',fill:true,tension:0.3,pointRadius:0,pointHoverRadius:4,borderWidth:2},
-        {label:'California',data:data.map(r=>r.ca_total),borderColor:'#c9a84c',backgroundColor:'rgba(201,168,76,0.07)',fill:true,tension:0.3,pointRadius:0,pointHoverRadius:4,borderWidth:2},
-        {label:'Other',data:data.map(r=>r.other),borderColor:'#4cc98a',backgroundColor:'rgba(76,201,138,0.07)',fill:true,tension:0.3,pointRadius:0,pointHoverRadius:4,borderWidth:1.5,borderDash:[4,3]}
+        {label:'Monroe',data:data.map(r=>r.monroe),borderColor:MC,backgroundColor:MC+'12',fill:true,tension:0.3,pointRadius:0,pointHoverRadius:4,borderWidth:2},
+        {label:'Hellman',data:data.map(r=>r.hellman),borderColor:HC,backgroundColor:HC+'12',fill:true,tension:0.3,pointRadius:0,pointHoverRadius:4,borderWidth:2}
       ]
     },
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...BT}},scales:BS}
   });
 }
 
-function buildAnnualBar() {
-  const ctx = document.getElementById('annualBar').getContext('2d');
-  if(CH.ab) CH.ab.destroy();
-  const years=['2024','2025','2026'];
-  const vals=years.map(y=>RAW.monthly.filter(r=>r.date.startsWith(y)).reduce((s,r)=>s+r.total,0));
-  CH.ab = new Chart(ctx, {
-    type:'bar',
+function buildRegion(data) {
+  const ctx = document.getElementById('regionLine').getContext('2d');
+  if(CH.r) CH.r.destroy();
+  CH.r = new Chart(ctx, {
+    type:'line',
     data:{
-      labels:['2024','2025','2026 YTD'],
-      datasets:[{label:'Annual Total',data:vals,
-        backgroundColor:['rgba(124,106,245,0.6)','rgba(124,106,245,0.6)','rgba(124,106,245,0.6)','rgba(245,166,76,0.5)'],
-        borderColor:['#7c6af5','#7c6af5','#7c6af5','#f5a64c'],borderWidth:1.5,borderRadius:4}]
+      labels:data.map(r=>r.date),
+      datasets:[
+        {label:'Florida',data:data.map(r=>r.fl_total),borderColor:FLC,backgroundColor:FLC+'10',fill:true,tension:0.3,pointRadius:0,pointHoverRadius:4,borderWidth:2},
+        {label:'California',data:data.map(r=>r.ca_total),borderColor:CAC,backgroundColor:CAC+'10',fill:true,tension:0.3,pointRadius:0,pointHoverRadius:4,borderWidth:2}
+      ]
     },
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...BT,callbacks:{label:c=>' '+fmtFull(c.raw)}}},scales:BS}
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...BT}},scales:BS}
   });
 }
 
-function buildOwnerGrid(data) {
-  const grand = data.reduce((s,r)=>s+r.total,0);
-  document.getElementById('ownerGrid').innerHTML = OWNERS.map(o=>{
-    const val=data.reduce((s,r)=>s+(r.by_owner[o]||0),0);
-    const pct=grand>0?(val/grand*100).toFixed(1):0;
-    return `<div class="owner-card ${OCC[o]}">
-      <div class="owner-name">${o}</div>
-      <div class="owner-val">${fmt(val)}</div>
-      <div class="owner-pct">${pct}% of total</div>
+function buildYearSummary() {
+  const years = ['2024','2025','2026'];
+  const labels = ['2024','2025','2026 YTD'];
+  document.getElementById('yearSummary').innerHTML = years.map((yr,i) => {
+    const rows = RAW.monthly.filter(r=>r.date.startsWith(yr));
+    const m = rows.reduce((s,r)=>s+r.monroe,0);
+    const h = rows.reduce((s,r)=>s+r.hellman,0);
+    const t = m+h;
+    return `<div class="yr-card">
+      <div class="yr-label">${labels[i]}</div>
+      <div class="yr-row"><div class="yr-name"><div class="ldot" style="background:${MC}"></div>Monroe</div><div class="yr-val" style="color:${MC}">${fmtFull(m)}</div></div>
+      <div class="yr-row"><div class="yr-name"><div class="ldot" style="background:${HC}"></div>Hellman</div><div class="yr-val" style="color:${HC}">${fmtFull(h)}</div></div>
+      <hr class="yr-divider">
+      <div class="yr-total"><span>Combined</span><span>${fmtFull(t)}</span></div>
     </div>`;
   }).join('');
 }
 
-function buildPropTable() {
-  const entries = Object.entries(RAW.props);
-  const maxVal = entries[0][1].total;
-  document.querySelector('#propTable tbody').innerHTML = entries.map(([name,info])=>{
-    const c=OC[info.owner]; const bg=OBGC[info.owner];
-    return `<tr>
-      <td><div style="font-size:12px">${name}</div><div class="bar-bg"><div class="bar-fill" style="width:${(info.total/maxVal*100).toFixed(1)}%;background:${c}"></div></div></td>
-      <td><span class="owner-tag" style="background:${bg};color:${c};border:1px solid ${c}40">${info.owner}</span></td>
-      <td>${fmtFull(info.total)}</td>
-    </tr>`;
-  }).join('');
+function buildTable(data) {
+  const maxM = Math.max(...data.map(r=>r.monroe));
+  const maxH = Math.max(...data.map(r=>r.hellman));
+  document.querySelector('#cmpTable tbody').innerHTML = [...data].reverse().map(r=>`
+    <tr>
+      <td><div>${r.date}</div></td>
+      <td><div style="color:${MC}">${fmtFull(r.monroe)}</div><div class="bar-bg"><div class="bar-m" style="width:${(r.monroe/maxM*100).toFixed(1)}%"></div></div></td>
+      <td><div style="color:${HC}">${fmtFull(r.hellman)}</div><div class="bar-bg"><div class="bar-h" style="width:${(r.hellman/maxH*100).toFixed(1)}%"></div></div></td>
+      <td style="text-align:right;font-weight:600">${fmtFull(r.total)}</td>
+    </tr>`).join('');
 }
 
 function updateKPIs(data) {
-  const total=data.reduce((s,r)=>s+r.total,0);
-  const fl=data.reduce((s,r)=>s+r.fl_total,0);
-  const ca=data.reduce((s,r)=>s+r.ca_total,0);
-  const avg=data.length>0?total/data.length:0;
-  const peak=data.reduce((b,r)=>r.total>b.total?r:b,{total:0,date:'—'});
-  document.getElementById('kpiTotal').textContent=fmt(total);
-  document.getElementById('kpiTotalSub').textContent=data.length+' months';
-  document.getElementById('kpiFL').textContent=fmt(fl);
-  document.getElementById('kpiFLPct').textContent=total>0?(fl/total*100).toFixed(1)+'% of total':'';
-  document.getElementById('kpiCA').textContent=fmt(ca);
-  document.getElementById('kpiFLCAPct').textContent=total>0?(ca/total*100).toFixed(1)+'% of total':'';
-  document.getElementById('kpiAvg').textContent=fmt(avg);
-  document.getElementById('kpiPeak').textContent=fmt(peak.total);
-  document.getElementById('kpiPeakDate').textContent=peak.date;
-  const last=data[data.length-1];
-  if(last) document.getElementById('lastUpdated').textContent='Last entry: '+last.date;
+  const m = data.reduce((s,r)=>s+r.monroe,0);
+  const h = data.reduce((s,r)=>s+r.hellman,0);
+  const t = m+h;
+  const fl = data.reduce((s,r)=>s+r.fl_total,0);
+  const ca = data.reduce((s,r)=>s+r.ca_total,0);
+  document.getElementById('kpiMonroe').textContent = fmt(m);
+  document.getElementById('kpiMonroePct').textContent = t>0?(m/t*100).toFixed(1)+'% of combined':'';
+  document.getElementById('kpiMonroeAvg').textContent = fmt(data.length>0?m/data.length:0);
+  document.getElementById('kpiHellman').textContent = fmt(h);
+  document.getElementById('kpiHellmanPct').textContent = t>0?(h/t*100).toFixed(1)+'% of combined':'';
+  document.getElementById('kpiHellmanAvg').textContent = fmt(data.length>0?h/data.length:0);
+  document.getElementById('kpiFL').textContent = fmt(fl);
+  document.getElementById('kpiFLPct').textContent = t>0?(fl/t*100).toFixed(1)+'% of combined':'';
+  document.getElementById('kpiCA').textContent = fmt(ca);
+  document.getElementById('kpiFLCAPct').textContent = t>0?(ca/t*100).toFixed(1)+'% of combined':'';
+  const last = data[data.length-1];
+  if(last) document.getElementById('lastUpdated').textContent = 'Last entry: '+last.date;
 }
 
-function render(year) {
-  const data=filter(year);
+function render(yr) {
+  const data = filter(yr);
   updateKPIs(data);
-  buildOwnerGrid(data);
-  buildOwnerStack(data);
-  buildOwnerDonut(data);
-  buildRegionLine(data);
-  buildAnnualBar();
-  buildPropTable();
+  buildStack(data);
+  buildDonut(data);
+  buildTrend(data);
+  buildRegion(data);
+  buildYearSummary();
+  buildTable(data);
 }
 
 document.querySelectorAll('.year-btn').forEach(btn=>{
