@@ -7,91 +7,90 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0d1117; --surface: #161b22; --surface2: #1c2230; --border: #21293a;
-    --text: #e6edf3; --muted: #8b949e;
-    --monroe: #f5a64c; --hellman: #7c6af5; --fl: #4c9ef5; --ca: #4cc9b0;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
-
-  header { padding:26px 36px 18px; border-bottom:1px solid var(--border); display:flex; align-items:flex-end; justify-content:space-between; background:var(--surface); }
-  header h1 { font-family:'DM Serif Display',serif; font-size:27px; letter-spacing:-0.5px; }
-  header p { font-size:12px; color:var(--muted); margin-top:3px; }
-  .last-updated { font-size:12px; color:var(--muted); background:var(--surface2); border:1px solid var(--border); padding:6px 12px; border-radius:6px; }
-
-  .filter-bar { padding:12px 36px; display:flex; align-items:center; gap:8px; border-bottom:1px solid var(--border); }
-  .filter-bar span { font-size:11px; color:var(--muted); margin-right:4px; text-transform:uppercase; letter-spacing:0.08em; }
-  .year-btn { padding:5px 14px; border-radius:20px; border:1px solid var(--border); background:transparent; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:13px; cursor:pointer; transition:all 0.15s; }
-  .year-btn:hover { border-color:var(--hellman); color:var(--hellman); }
-  .year-btn.active { background:var(--hellman); color:#fff; border-color:var(--hellman); font-weight:600; }
-
-  .dashboard { padding:26px 36px; display:flex; flex-direction:column; gap:20px; max-width:1600px; margin:0 auto; }
-
-  /* KPI ROW */
-  .kpi-row { display:grid; grid-template-columns:repeat(6,1fr); gap:14px; }
-  .kpi-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px 20px; position:relative; overflow:hidden; }
-  .kpi-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
-  .kpi-card.monroe::before { background:var(--monroe); }
-  .kpi-card.hellman::before { background:var(--hellman); }
-  .kpi-card.combined::before { background:linear-gradient(90deg,var(--monroe),var(--hellman)); }
-  .kpi-card.fl::before { background:var(--fl); }
-  .kpi-card.ca::before { background:var(--ca); }
-  .kpi-label { font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:8px; }
-  .kpi-value { font-family:'DM Serif Display',serif; font-size:24px; line-height:1; }
-  .kpi-sub { font-size:11px; color:var(--muted); margin-top:5px; }
-
-  /* CARDS & GRID */
-  .chart-row { display:grid; gap:18px; }
-  .col-2 { grid-template-columns:1fr 1fr; }
-  .col-3-1 { grid-template-columns:2.4fr 1fr; }
-  .card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px 22px; }
-  .card-title { font-size:13px; font-weight:600; margin-bottom:3px; }
-  .card-sub { font-size:11px; color:var(--muted); margin-bottom:16px; }
-  .chart-wrap { position:relative; }
-  .h260 { height:260px; } .h220 { height:220px; } .h200 { height:200px; }
-
-  .legend { display:flex; flex-wrap:wrap; gap:14px; margin-bottom:14px; }
-  .legend-item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted); }
-  .ldot { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
-
-  /* COMPARISON TABLE */
-  .cmp-table { width:100%; border-collapse:collapse; font-size:12px; }
-  .cmp-table th { text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); padding:0 0 8px; border-bottom:1px solid var(--border); font-weight:500; }
-  .cmp-table th:nth-child(2), .cmp-table th:nth-child(3) { text-align:right; }
-  .cmp-table td { padding:7px 0; border-bottom:1px solid rgba(33,41,58,0.5); vertical-align:middle; font-size:12px; }
-  .cmp-table td:nth-child(2), .cmp-table td:nth-child(3) { text-align:right; font-weight:600; font-size:13px; }
-  .cmp-table tr:last-child td { border-bottom:none; }
-  .bar-bg { background:var(--surface2); border-radius:2px; height:3px; margin-top:3px; }
-  .bar-m { height:3px; border-radius:2px; background:var(--monroe); }
-  .bar-h { height:3px; border-radius:2px; background:var(--hellman); }
-
-  /* YEAR SUMMARY CARDS */
-  .year-summary { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
-  .yr-card { background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:16px 18px; }
-  .yr-label { font-size:12px; font-weight:600; color:var(--muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.06em; }
-  .yr-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:7px; font-size:12px; }
-  .yr-name { display:flex; align-items:center; gap:7px; color:var(--muted); }
-  .yr-val { font-weight:600; }
-  .yr-divider { border:none; border-top:1px solid var(--border); margin:8px 0; }
-  .yr-total { display:flex; justify-content:space-between; font-size:13px; font-weight:600; }
-
-  footer { text-align:center; padding:18px; font-size:11px; color:var(--muted); border-top:1px solid var(--border); }
-
-  @media (max-width:1100px) { .kpi-row { grid-template-columns:repeat(3,1fr); } .col-3-1,.col-2 { grid-template-columns:1fr; } .year-summary { grid-template-columns:1fr 1fr; } }
-  @media (max-width:700px) { .dashboard { padding:14px; } header { padding:14px; flex-direction:column; align-items:flex-start; gap:8px; } .kpi-row { grid-template-columns:1fr 1fr; } .filter-bar { padding:10px 14px; flex-wrap:wrap; } }
+:root{--bg:#0d1117;--surface:#161b22;--surface2:#1c2230;--border:#21293a;--text:#e6edf3;--muted:#8b949e;--monroe:#f5a64c;--hellman:#7c6af5;--fl:#4c9ef5;--ca:#4cc9b0;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:22px 32px 16px;border-bottom:1px solid var(--border);display:flex;align-items:flex-end;justify-content:space-between;background:var(--surface);}
+header h1{font-family:'DM Serif Display',serif;font-size:26px;letter-spacing:-.5px;}
+header p{font-size:12px;color:var(--muted);margin-top:3px;}
+.last-updated{font-size:12px;color:var(--muted);background:var(--surface2);border:1px solid var(--border);padding:6px 12px;border-radius:6px;}
+.filter-bar{padding:10px 32px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);background:var(--surface);}
+.filter-bar span{font-size:11px;color:var(--muted);margin-right:4px;text-transform:uppercase;letter-spacing:.08em;}
+.year-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;transition:all .15s;}
+.year-btn:hover{border-color:var(--hellman);color:var(--hellman);}
+.year-btn.active{background:var(--hellman);color:#fff;border-color:var(--hellman);font-weight:600;}
+.dash{padding:22px 32px;display:flex;flex-direction:column;gap:18px;max-width:1700px;margin:0 auto;}
+.kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden;}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.kpi-card.monroe::before{background:var(--monroe);}
+.kpi-card.hellman::before{background:var(--hellman);}
+.kpi-card.fl::before{background:var(--fl);}
+.kpi-card.ca::before{background:var(--ca);}
+.kpi-label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:7px;}
+.kpi-value{font-family:'DM Serif Display',serif;font-size:22px;line-height:1;}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:4px;}
+.row{display:grid;gap:16px;}
+.col2{grid-template-columns:1fr 1fr;}
+.col31{grid-template-columns:2.3fr 1fr;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;}
+.card-title{font-size:13px;font-weight:600;margin-bottom:2px;}
+.card-sub{font-size:11px;color:var(--muted);margin-bottom:14px;}
+.h240{height:240px;}.h200{height:200px;}
+.chart-wrap{position:relative;}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px;}
+.li{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
+.ld{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+.asset-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:4px;}
+.at-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
+.at-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.at-dot{width:7px;height:7px;border-radius:1px;flex-shrink:0;}
+.at-val{font-size:18px;font-weight:600;font-family:'DM Serif Display',serif;}
+.at-pct{font-size:11px;color:var(--muted);margin-top:2px;}
+.yr-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.yr-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;}
+.yr-label{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em;}
+.yr-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:12px;}
+.yr-name{display:flex;align-items:center;gap:6px;color:var(--muted);}
+.yr-dot{width:8px;height:8px;border-radius:2px;display:inline-block;}
+.yr-val{font-weight:600;}
+.yr-div{border:none;border-top:1px solid var(--border);margin:7px 0;}
+.yr-total{display:flex;justify-content:space-between;font-size:13px;font-weight:600;}
+.prop-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.pf-btn{padding:4px 11px;border-radius:14px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer;transition:all .15s;}
+.pf-btn:hover,.pf-btn.active{border-color:var(--hellman);color:var(--hellman);background:rgba(124,106,245,.08);}
+.prop-table{width:100%;border-collapse:collapse;font-size:12px;}
+.prop-table th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:0 8px 8px 0;border-bottom:1px solid var(--border);font-weight:500;cursor:pointer;user-select:none;}
+.prop-table th:hover{color:var(--text);}
+.prop-table th.sorted{color:var(--hellman);}
+.prop-table td{padding:8px 8px 8px 0;border-bottom:1px solid rgba(33,41,58,.5);vertical-align:middle;}
+.prop-table tr:last-child td{border-bottom:none;}
+.prop-table tr:hover td{background:rgba(255,255,255,.02);}
+.tag{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:500;}
+.tag-fl{background:rgba(76,158,245,.15);color:#4c9ef5;}
+.tag-ca{background:rgba(76,201,176,.15);color:#4cc9b0;}
+.tag-apt{background:rgba(245,166,76,.12);color:#f5a64c;}
+.tag-mhp{background:rgba(76,201,176,.12);color:#4cc9b0;}
+.tag-ss{background:rgba(124,106,245,.12);color:#7c6af5;}
+.tag-ind{background:rgba(245,106,106,.12);color:#f56a6a;}
+.tag-ret{background:rgba(168,212,76,.12);color:#a8d44c;}
+.tag-oth{background:rgba(139,148,158,.12);color:#8b949e;}
+.bar-bg{background:var(--surface2);border-radius:2px;height:3px;margin-top:3px;}
+.bar-fill{height:3px;border-radius:2px;}
+.donut-legend{margin-top:12px;display:flex;flex-direction:column;gap:7px;}
+.dl-row{display:flex;justify-content:space-between;align-items:center;}
+.dl-name{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);}
+.dl-val{font-size:12px;font-weight:600;}
+footer{text-align:center;padding:16px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);margin-top:8px;}
+@media(max-width:1200px){.kpi-row{grid-template-columns:repeat(3,1fr);}.col31,.col2{grid-template-columns:1fr;}.yr-cards{grid-template-columns:1fr 1fr;}.asset-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:700px){.dash{padding:12px;}.kpi-row{grid-template-columns:1fr 1fr;}.asset-grid{grid-template-columns:1fr 1fr;}.yr-cards{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
-
 <header>
-  <div>
-    <h1>Distribution Tracker</h1>
-    <p>Monroe &amp; Hellman — Portfolio Distributions · 2024 onwards</p>
-  </div>
+  <div><h1>Distribution Tracker</h1><p>Monroe &amp; Hellman — Portfolio Distributions · 2024 onwards</p></div>
   <div id="lastUpdated" class="last-updated">Last entry: —</div>
 </header>
-
 <div class="filter-bar">
   <span>Year</span>
   <button class="year-btn active" data-year="all">All (2024+)</button>
@@ -99,264 +98,162 @@
   <button class="year-btn" data-year="2025">2025</button>
   <button class="year-btn" data-year="2026">2026 YTD</button>
 </div>
-
-<div class="dashboard">
-
-  <!-- KPI ROW -->
+<div class="dash">
   <div class="kpi-row">
-    <div class="kpi-card monroe">
-      <div class="kpi-label">Monroe Total</div>
-      <div class="kpi-value" id="kpiMonroe">—</div>
-      <div class="kpi-sub" id="kpiMonroePct"></div>
-    </div>
-    <div class="kpi-card monroe">
-      <div class="kpi-label">Monroe Monthly Avg</div>
-      <div class="kpi-value" id="kpiMonroeAvg">—</div>
-      <div class="kpi-sub">per month</div>
-    </div>
-    <div class="kpi-card hellman">
-      <div class="kpi-label">Hellman Total</div>
-      <div class="kpi-value" id="kpiHellman">—</div>
-      <div class="kpi-sub" id="kpiHellmanPct"></div>
-    </div>
-    <div class="kpi-card hellman">
-      <div class="kpi-label">Hellman Monthly Avg</div>
-      <div class="kpi-value" id="kpiHellmanAvg">—</div>
-      <div class="kpi-sub">per month</div>
-    </div>
-    <div class="kpi-card fl">
-      <div class="kpi-label">Florida Total</div>
-      <div class="kpi-value" id="kpiFL">—</div>
-      <div class="kpi-sub" id="kpiFLPct"></div>
-    </div>
-    <div class="kpi-card ca">
-      <div class="kpi-label">California Total</div>
-      <div class="kpi-value" id="kpiCA">—</div>
-      <div class="kpi-sub" id="kpiFLCAPct"></div>
-    </div>
+    <div class="kpi-card monroe"><div class="kpi-label">Monroe Total</div><div class="kpi-value" id="kM">—</div><div class="kpi-sub" id="kMpct"></div></div>
+    <div class="kpi-card monroe"><div class="kpi-label">Monroe Monthly Avg</div><div class="kpi-value" id="kMavg">—</div><div class="kpi-sub">per month</div></div>
+    <div class="kpi-card hellman"><div class="kpi-label">Hellman Total</div><div class="kpi-value" id="kH">—</div><div class="kpi-sub" id="kHpct"></div></div>
+    <div class="kpi-card hellman"><div class="kpi-label">Hellman Monthly Avg</div><div class="kpi-value" id="kHavg">—</div><div class="kpi-sub">per month</div></div>
+    <div class="kpi-card fl"><div class="kpi-label">Florida Total</div><div class="kpi-value" id="kFL">—</div><div class="kpi-sub" id="kFLpct"></div></div>
+    <div class="kpi-card ca"><div class="kpi-label">California Total</div><div class="kpi-value" id="kCA">—</div><div class="kpi-sub" id="kCApct"></div></div>
   </div>
-
-  <!-- MAIN CHART + DONUT -->
-  <div class="chart-row col-3-1">
+  <div class="card">
+    <div class="card-title">Asset Type Breakdown — Combined (Monroe + Hellman)</div>
+    <div class="card-sub">Total distributions by property type for selected period</div>
+    <div class="asset-grid" id="assetGrid"></div>
+  </div>
+  <div class="row col31">
     <div class="card">
       <div class="card-title">Monthly Distributions — Monroe vs. Hellman</div>
       <div class="card-sub">Stacked monthly view of each partner's distributions</div>
-      <div class="legend">
-        <div class="legend-item"><div class="ldot" style="background:var(--monroe)"></div>Monroe</div>
-        <div class="legend-item"><div class="ldot" style="background:var(--hellman)"></div>Hellman</div>
-      </div>
-      <div class="chart-wrap h260"><canvas id="stackChart"></canvas></div>
+      <div class="legend"><div class="li"><div class="ld" style="background:var(--monroe)"></div>Monroe</div><div class="li"><div class="ld" style="background:var(--hellman)"></div>Hellman</div></div>
+      <div class="chart-wrap h240"><canvas id="stackChart"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-title">Split</div>
-      <div class="card-sub">Monroe vs. Hellman share for selected period</div>
-      <div class="chart-wrap h220"><canvas id="splitDonut"></canvas></div>
-      <div id="donutLegend" style="margin-top:14px;display:flex;flex-direction:column;gap:8px;"></div>
+      <div class="card-title">Monroe / Hellman Split</div>
+      <div class="card-sub">Share of combined distributions</div>
+      <div class="chart-wrap h200"><canvas id="splitDonut"></canvas></div>
+      <div class="donut-legend" id="donutLegend"></div>
     </div>
   </div>
-
-  <!-- TREND LINES + ANNUAL SUMMARY -->
-  <div class="chart-row col-2">
+  <div class="row col2">
     <div class="card">
       <div class="card-title">Monroe vs. Hellman — Monthly Trend</div>
       <div class="card-sub">Individual distribution amounts over time</div>
-      <div class="legend">
-        <div class="legend-item"><div class="ldot" style="background:var(--monroe)"></div>Monroe</div>
-        <div class="legend-item"><div class="ldot" style="background:var(--hellman)"></div>Hellman</div>
-      </div>
+      <div class="legend"><div class="li"><div class="ld" style="background:var(--monroe)"></div>Monroe</div><div class="li"><div class="ld" style="background:var(--hellman)"></div>Hellman</div></div>
       <div class="chart-wrap h200"><canvas id="trendLine"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-title">Florida vs. California — Monthly Trend</div>
-      <div class="card-sub">Regional breakdown over time</div>
+      <div class="card-title">Asset Type Trend — Combined</div>
+      <div class="card-sub">Monthly distributions by asset type</div>
       <div class="legend">
-        <div class="legend-item"><div class="ldot" style="background:var(--fl)"></div>Florida</div>
-        <div class="legend-item"><div class="ldot" style="background:var(--ca)"></div>California</div>
+        <div class="li"><div class="ld" style="background:#f5a64c"></div>Apartment</div>
+        <div class="li"><div class="ld" style="background:#4cc9b0"></div>Mobile Home Park</div>
+        <div class="li"><div class="ld" style="background:#7c6af5"></div>Self Storage</div>
+        <div class="li"><div class="ld" style="background:#f56a6a"></div>Industrial</div>
+        <div class="li"><div class="ld" style="background:#a8d44c"></div>Retail</div>
+        <div class="li"><div class="ld" style="background:#8b949e"></div>Other</div>
       </div>
-      <div class="chart-wrap h200"><canvas id="regionLine"></canvas></div>
+      <div class="chart-wrap h200"><canvas id="assetLine"></canvas></div>
     </div>
   </div>
-
-  <!-- ANNUAL YEAR CARDS -->
-  <div class="card">
-    <div class="card-title">Annual Summary</div>
-    <div class="card-sub">Monroe and Hellman totals by year</div>
-    <div class="year-summary" id="yearSummary"></div>
+  <div class="row col2">
+    <div class="card">
+      <div class="card-title">Florida vs. California — Monthly Trend</div>
+      <div class="card-sub">Regional breakdown (Monroe totals)</div>
+      <div class="legend"><div class="li"><div class="ld" style="background:var(--fl)"></div>Florida</div><div class="li"><div class="ld" style="background:var(--ca)"></div>California</div></div>
+      <div class="chart-wrap h200"><canvas id="regionLine"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Annual Summary</div>
+      <div class="card-sub">Monroe and Hellman totals by year</div>
+      <div class="yr-cards" id="yrCards"></div>
+    </div>
   </div>
-
-  <!-- MONTHLY COMPARISON TABLE -->
   <div class="card">
-    <div class="card-title">Month-by-Month Breakdown</div>
-    <div class="card-sub">Monroe and Hellman distributions for each month — selected period</div>
+    <div class="card-title">Property-Level Distributions</div>
+    <div class="card-sub">All 32 properties — 2024 onwards. Filter by state or asset type. Click column headers to sort.</div>
+    <div class="prop-filters" id="propFilters"></div>
     <div style="overflow-x:auto;">
-      <table class="cmp-table" id="cmpTable">
-        <thead><tr><th style="width:30%">Month</th><th>Monroe</th><th>Hellman</th><th style="text-align:right">Combined</th></tr></thead>
-        <tbody></tbody>
+      <table class="prop-table" id="propTable">
+        <thead><tr>
+          <th data-col="name">Property</th>
+          <th data-col="state">State</th>
+          <th data-col="type">Asset Type</th>
+          <th data-col="owner">Ownership</th>
+          <th data-col="total" class="sorted" style="text-align:right">Total (2024+)</th>
+        </tr></thead>
+        <tbody id="propBody"></tbody>
       </table>
     </div>
   </div>
-
+  <div class="card">
+    <div class="card-title">Month-by-Month Breakdown</div>
+    <div class="card-sub">Monroe and Hellman distributions for selected period</div>
+    <div style="overflow-x:auto;">
+      <table class="prop-table">
+        <thead><tr><th>Month</th><th style="color:var(--monroe)">Monroe</th><th style="color:var(--hellman)">Hellman</th><th style="text-align:right">Combined</th></tr></thead>
+        <tbody id="monthBody"></tbody>
+      </table>
+    </div>
+  </div>
 </div>
-<footer>Distribution Tracker Dashboard · Monroe &amp; Hellman · Data from 2024 onwards</footer>
-
+<footer>Distribution Tracker · Monroe &amp; Hellman · 2024 onwards</footer>
 <script>
-const RAW = {"monthly": [{"date": "2024-01", "monroe": 95416.67, "hellman": 35750.0, "total": 131166.67, "fl_total": 32250.0, "ca_total": 63166.67, "other": 0}, {"date": "2024-02", "monroe": 115416.67, "hellman": 35750.0, "total": 151166.67, "fl_total": 36500.0, "ca_total": 78916.67, "other": 0}, {"date": "2024-03", "monroe": 126666.67, "hellman": 43000.0, "total": 169666.67, "fl_total": 37000.0, "ca_total": 89666.67, "other": 0}, {"date": "2024-04", "monroe": 113666.67, "hellman": 30000.0, "total": 143666.67, "fl_total": 28000.0, "ca_total": 85666.67, "other": 0}, {"date": "2024-05", "monroe": 117916.67, "hellman": 38750.0, "total": 156666.67, "fl_total": 30000.0, "ca_total": 87916.67, "other": 0}, {"date": "2024-06", "monroe": 135666.67, "hellman": 49000.0, "total": 184666.67, "fl_total": 30000.0, "ca_total": 105666.67, "other": 0}, {"date": "2024-07", "monroe": 152666.67, "hellman": 41000.0, "total": 193666.67, "fl_total": 29000.0, "ca_total": 123666.67, "other": 0}, {"date": "2024-08", "monroe": 128416.67, "hellman": 41750.0, "total": 170166.67, "fl_total": 31000.0, "ca_total": 97416.67, "other": 0}, {"date": "2024-09", "monroe": 146158.67, "hellman": 49000.0, "total": 195158.67, "fl_total": 31000.0, "ca_total": 115158.67, "other": 0}, {"date": "2024-10", "monroe": 130184.91, "hellman": 45018.24, "total": 175203.15, "fl_total": 20000.0, "ca_total": 110184.91, "other": 0}, {"date": "2024-11", "monroe": 126666.67, "hellman": 50000.0, "total": 176666.67, "fl_total": 27500.0, "ca_total": 99166.67, "other": 0}, {"date": "2024-12", "monroe": 206662.67, "hellman": 43850.0, "total": 250512.67, "fl_total": 31000.0, "ca_total": 175662.67, "other": 0}, {"date": "2025-01", "monroe": 102666.67, "hellman": 54000.0, "total": 156666.67, "fl_total": 30500.0, "ca_total": 72166.67, "other": 0}, {"date": "2025-02", "monroe": 126166.67, "hellman": 52500.0, "total": 178666.67, "fl_total": 34000.0, "ca_total": 92166.67, "other": 0}, {"date": "2025-03", "monroe": 124116.97, "hellman": 49950.3, "total": 174067.27, "fl_total": 34700.3, "ca_total": 89416.67, "other": 0}, {"date": "2025-04", "monroe": 139239.17, "hellman": 50475.3, "total": 189714.47, "fl_total": 31200.3, "ca_total": 108038.87, "other": 0}, {"date": "2025-05", "monroe": 123866.97, "hellman": 52200.3, "total": 176067.27, "fl_total": 31200.3, "ca_total": 92666.67, "other": 0}, {"date": "2025-06", "monroe": 126381.22, "hellman": 48214.55, "total": 174595.77, "fl_total": 31714.55, "ca_total": 94666.67, "other": 0}, {"date": "2025-07", "monroe": 135131.22, "hellman": 49364.55, "total": 184495.77, "fl_total": 36214.55, "ca_total": 98916.67, "other": 0}, {"date": "2025-08", "monroe": 125881.22, "hellman": 50714.55, "total": 176595.77, "fl_total": 30214.55, "ca_total": 95666.67, "other": 0}, {"date": "2025-09", "monroe": 138881.22, "hellman": 56214.55, "total": 195095.77, "fl_total": 34214.55, "ca_total": 104666.67, "other": 0}, {"date": "2025-10", "monroe": 168906.22, "hellman": 51839.55, "total": 220745.77, "fl_total": 27214.55, "ca_total": 141691.67, "other": 0}, {"date": "2025-11", "monroe": 139495.59, "hellman": 54578.92, "total": 194074.51, "fl_total": 33328.92, "ca_total": 106166.67, "other": 0}, {"date": "2025-12", "monroe": 319745.59, "hellman": 55578.92, "total": 375324.51, "fl_total": 28828.92, "ca_total": 290916.67, "other": 0}, {"date": "2026-01", "monroe": 178788.84, "hellman": 61500.37, "total": 240289.21, "fl_total": 32200.37, "ca_total": 146588.47, "other": 0}, {"date": "2026-02", "monroe": 171818.04, "hellman": 85651.37, "total": 257469.41, "fl_total": 30700.37, "ca_total": 106416.67, "other": 34701.0}]};
+const RAW = {"monroe":[{"date":"2024-01","total":95416.67,"fl":32250.0,"ca":63166.67,"by_type":{"Apartment":32250.0,"Industrial":0,"Retail":0,"Mobile Home Park":63166.67,"Self Storage":0,"Other":0}},{"date":"2024-02","total":115416.67,"fl":36500.0,"ca":78916.67,"by_type":{"Apartment":36500.0,"Industrial":0,"Retail":0,"Mobile Home Park":78916.67,"Self Storage":0,"Other":0}},{"date":"2024-03","total":126666.67,"fl":37000.0,"ca":89666.67,"by_type":{"Apartment":37000.0,"Industrial":0,"Retail":0,"Mobile Home Park":79666.67,"Self Storage":10000.0,"Other":0}},{"date":"2024-04","total":113666.67,"fl":28000.0,"ca":85666.67,"by_type":{"Apartment":28000.0,"Industrial":0,"Retail":0,"Mobile Home Park":85666.67,"Self Storage":0,"Other":0}},{"date":"2024-05","total":117916.67,"fl":30000.0,"ca":87916.67,"by_type":{"Apartment":30000.0,"Industrial":0,"Retail":0,"Mobile Home Park":87916.67,"Self Storage":0,"Other":0}},{"date":"2024-06","total":135666.67,"fl":30000.0,"ca":105666.67,"by_type":{"Apartment":30000.0,"Industrial":0,"Retail":0,"Mobile Home Park":95666.67,"Self Storage":10000.0,"Other":0}},{"date":"2024-07","total":152666.67,"fl":29000.0,"ca":123666.67,"by_type":{"Apartment":29000.0,"Industrial":0,"Retail":0,"Mobile Home Park":123666.67,"Self Storage":0,"Other":0}},{"date":"2024-08","total":128416.67,"fl":31000.0,"ca":97416.67,"by_type":{"Apartment":31000.0,"Industrial":0,"Retail":0,"Mobile Home Park":97416.67,"Self Storage":0,"Other":0}},{"date":"2024-09","total":146158.67,"fl":31000.0,"ca":115158.67,"by_type":{"Apartment":31000.0,"Industrial":0,"Retail":0,"Mobile Home Park":105158.67,"Self Storage":10000.0,"Other":0}},{"date":"2024-10","total":130184.91,"fl":20000.0,"ca":110184.91,"by_type":{"Apartment":20000.0,"Industrial":0,"Retail":0,"Mobile Home Park":110184.91,"Self Storage":0,"Other":0}},{"date":"2024-11","total":126666.67,"fl":27500.0,"ca":99166.67,"by_type":{"Apartment":27500.0,"Industrial":0,"Retail":0,"Mobile Home Park":99166.67,"Self Storage":0,"Other":0}},{"date":"2024-12","total":206662.67,"fl":31000.0,"ca":175662.67,"by_type":{"Apartment":31000.0,"Industrial":0,"Retail":0,"Mobile Home Park":166662.67,"Self Storage":9000.0,"Other":0}},{"date":"2025-01","total":102666.67,"fl":30500.0,"ca":72166.67,"by_type":{"Apartment":30500.0,"Industrial":0,"Retail":0,"Mobile Home Park":72166.67,"Self Storage":0,"Other":0}},{"date":"2025-02","total":126166.67,"fl":34000.0,"ca":92166.67,"by_type":{"Apartment":34000.0,"Industrial":0,"Retail":0,"Mobile Home Park":92166.67,"Self Storage":0,"Other":0}},{"date":"2025-03","total":124116.97,"fl":34700.3,"ca":89416.67,"by_type":{"Apartment":33000.0,"Industrial":1700.3,"Retail":0,"Mobile Home Park":89416.67,"Self Storage":0,"Other":0}},{"date":"2025-04","total":139239.17,"fl":31200.3,"ca":108038.87,"by_type":{"Apartment":29500.0,"Industrial":1700.3,"Retail":0,"Mobile Home Park":99538.87,"Self Storage":8500.0,"Other":0}},{"date":"2025-05","total":123866.97,"fl":31200.3,"ca":92666.67,"by_type":{"Apartment":28500.0,"Industrial":1700.3,"Retail":1000.0,"Mobile Home Park":92666.67,"Self Storage":0,"Other":0}},{"date":"2025-06","total":126381.22,"fl":31714.55,"ca":94666.67,"by_type":{"Apartment":30500.0,"Industrial":1214.55,"Retail":0,"Mobile Home Park":94666.67,"Self Storage":0,"Other":0}},{"date":"2025-07","total":135131.22,"fl":36214.55,"ca":98916.67,"by_type":{"Apartment":35000.0,"Industrial":1214.55,"Retail":0,"Mobile Home Park":92916.67,"Self Storage":6000.0,"Other":0}},{"date":"2025-08","total":125881.22,"fl":30214.55,"ca":95666.67,"by_type":{"Apartment":29000.0,"Industrial":1214.55,"Retail":0,"Mobile Home Park":95666.67,"Self Storage":0,"Other":0}},{"date":"2025-09","total":138881.22,"fl":34214.55,"ca":104666.67,"by_type":{"Apartment":33000.0,"Industrial":1214.55,"Retail":0,"Mobile Home Park":104666.67,"Self Storage":0,"Other":0}},{"date":"2025-10","total":168906.22,"fl":27214.55,"ca":141691.67,"by_type":{"Apartment":26000.0,"Industrial":1214.55,"Retail":0,"Mobile Home Park":134191.67,"Self Storage":7500.0,"Other":0}},{"date":"2025-11","total":139495.59,"fl":33328.92,"ca":106166.67,"by_type":{"Apartment":31750.0,"Industrial":1578.92,"Retail":0,"Mobile Home Park":106166.67,"Self Storage":0,"Other":0}},{"date":"2025-12","total":319745.59,"fl":28828.92,"ca":290916.67,"by_type":{"Apartment":27250.0,"Industrial":1578.92,"Retail":0,"Mobile Home Park":290916.67,"Self Storage":0,"Other":0}},{"date":"2026-01","total":178788.84,"fl":32200.37,"ca":146588.47,"by_type":{"Apartment":29500.0,"Industrial":1700.37,"Retail":1000.0,"Mobile Home Park":139588.47,"Self Storage":7000.0,"Other":0}},{"date":"2026-02","total":171818.04,"fl":30700.37,"ca":106416.67,"by_type":{"Apartment":28000.0,"Industrial":1700.37,"Retail":1000.0,"Mobile Home Park":106416.67,"Self Storage":0,"Other":34701.0}}],"hellman":[{"date":"2024-01","total":35750.0,"fl":17250.0,"ca":18500.0,"by_type":{"Apartment":17250.0,"Industrial":0,"Retail":0,"Mobile Home Park":18500.0,"Self Storage":0,"Other":0}},{"date":"2024-02","total":35750.0,"fl":18500.0,"ca":17250.0,"by_type":{"Apartment":18500.0,"Industrial":0,"Retail":0,"Mobile Home Park":17250.0,"Self Storage":0,"Other":0}},{"date":"2024-03","total":43000.0,"fl":19000.0,"ca":24000.0,"by_type":{"Apartment":19000.0,"Industrial":0,"Retail":0,"Mobile Home Park":20000.0,"Self Storage":4000.0,"Other":0}},{"date":"2024-04","total":30000.0,"fl":10000.0,"ca":20000.0,"by_type":{"Apartment":10000.0,"Industrial":0,"Retail":0,"Mobile Home Park":20000.0,"Self Storage":0,"Other":0}},{"date":"2024-05","total":38750.0,"fl":18000.0,"ca":20750.0,"by_type":{"Apartment":18000.0,"Industrial":0,"Retail":0,"Mobile Home Park":20750.0,"Self Storage":0,"Other":0}},{"date":"2024-06","total":49000.0,"fl":18000.0,"ca":31000.0,"by_type":{"Apartment":18000.0,"Industrial":0,"Retail":0,"Mobile Home Park":27000.0,"Self Storage":4000.0,"Other":0}},{"date":"2024-07","total":41000.0,"fl":13000.0,"ca":28000.0,"by_type":{"Apartment":13000.0,"Industrial":0,"Retail":0,"Mobile Home Park":28000.0,"Self Storage":0,"Other":0}},{"date":"2024-08","total":41750.0,"fl":15000.0,"ca":26750.0,"by_type":{"Apartment":15000.0,"Industrial":0,"Retail":0,"Mobile Home Park":26750.0,"Self Storage":0,"Other":0}},{"date":"2024-09","total":49000.0,"fl":15000.0,"ca":34000.0,"by_type":{"Apartment":15000.0,"Industrial":0,"Retail":0,"Mobile Home Park":30000.0,"Self Storage":4000.0,"Other":0}},{"date":"2024-10","total":45018.24,"fl":10000.0,"ca":35018.24,"by_type":{"Apartment":10000.0,"Industrial":0,"Retail":0,"Mobile Home Park":35018.24,"Self Storage":0,"Other":0}},{"date":"2024-11","total":50000.0,"fl":17500.0,"ca":32500.0,"by_type":{"Apartment":17500.0,"Industrial":0,"Retail":0,"Mobile Home Park":32500.0,"Self Storage":0,"Other":0}},{"date":"2024-12","total":43850.0,"fl":17000.0,"ca":26850.0,"by_type":{"Apartment":17000.0,"Industrial":0,"Retail":0,"Mobile Home Park":23250.0,"Self Storage":3600.0,"Other":0}},{"date":"2025-01","total":54000.0,"fl":20500.0,"ca":33500.0,"by_type":{"Apartment":20500.0,"Industrial":0,"Retail":0,"Mobile Home Park":33500.0,"Self Storage":0,"Other":0}},{"date":"2025-02","total":52500.0,"fl":19000.0,"ca":33500.0,"by_type":{"Apartment":19000.0,"Industrial":0,"Retail":0,"Mobile Home Park":33500.0,"Self Storage":0,"Other":0}},{"date":"2025-03","total":49950.3,"fl":21700.3,"ca":28250.0,"by_type":{"Apartment":20000.0,"Industrial":1700.3,"Retail":0,"Mobile Home Park":28250.0,"Self Storage":0,"Other":0}},{"date":"2025-04","total":50475.3,"fl":19200.3,"ca":31275.0,"by_type":{"Apartment":17500.0,"Industrial":1700.3,"Retail":0,"Mobile Home Park":27875.0,"Self Storage":3400.0,"Other":0}},{"date":"2025-05","total":52200.3,"fl":20200.3,"ca":32000.0,"by_type":{"Apartment":18500.0,"Industrial":1700.3,"Retail":0,"Mobile Home Park":32000.0,"Self Storage":0,"Other":0}},{"date":"2025-06","total":48214.55,"fl":21714.55,"ca":26500.0,"by_type":{"Apartment":20500.0,"Industrial":1214.55,"Retail":0,"Mobile Home Park":26500.0,"Self Storage":0,"Other":0}},{"date":"2025-07","total":49364.55,"fl":18214.55,"ca":31150.0,"by_type":{"Apartment":17000.0,"Industrial":1214.55,"Retail":0,"Mobile Home Park":28750.0,"Self Storage":2400.0,"Other":0}},{"date":"2025-08","total":50714.55,"fl":17214.55,"ca":33500.0,"by_type":{"Apartment":16000.0,"Industrial":1214.55,"Retail":0,"Mobile Home Park":33500.0,"Self Storage":0,"Other":0}},{"date":"2025-09","total":56214.55,"fl":21714.55,"ca":34500.0,"by_type":{"Apartment":20500.0,"Industrial":1214.55,"Retail":0,"Mobile Home Park":34500.0,"Self Storage":0,"Other":0}},{"date":"2025-10","total":51839.55,"fl":16714.55,"ca":35125.0,"by_type":{"Apartment":15500.0,"Industrial":1214.55,"Retail":0,"Mobile Home Park":32125.0,"Self Storage":3000.0,"Other":0}},{"date":"2025-11","total":54578.92,"fl":21328.92,"ca":33250.0,"by_type":{"Apartment":19750.0,"Industrial":1578.92,"Retail":0,"Mobile Home Park":33250.0,"Self Storage":0,"Other":0}},{"date":"2025-12","total":55578.92,"fl":16828.92,"ca":38750.0,"by_type":{"Apartment":15250.0,"Industrial":1578.92,"Retail":0,"Mobile Home Park":38750.0,"Self Storage":0,"Other":0}},{"date":"2026-01","total":61500.37,"fl":16200.37,"ca":45300.0,"by_type":{"Apartment":14500.0,"Industrial":1700.37,"Retail":0,"Mobile Home Park":42500.0,"Self Storage":2800.0,"Other":0}},{"date":"2026-02","total":85651.37,"fl":17700.37,"ca":33250.0,"by_type":{"Apartment":16000.0,"Industrial":1700.37,"Retail":0,"Mobile Home Park":33250.0,"Self Storage":0,"Other":34701.0}}],"props":{"Terrace Gardens / TGV":{"state":"CA","type":"Mobile Home Park","owner":"Monroe / Witt","total":492500.0},"Bardmoor Pointe / Semvil":{"state":"FL","type":"Apartment","owner":"Monroe / Hellman","total":472000.0},"Allston Lakes / Allston Lakes":{"state":"FL","type":"Apartment","owner":"Monroe","total":367500.0},"Apple Valley Lodge / AVE":{"state":"CA","type":"Mobile Home Park","owner":"Monroe / Witt","total":350000.0},"Desert Palms / Milana 8":{"state":"CA","type":"Mobile Home Park","owner":"Monroe","total":265000.0},"Roma / Milana 4":{"state":"FL","type":"Apartment","owner":"Monroe / Hellman","total":255000.0},"Sunny Skies / Mariol":{"state":"CA","type":"Mobile Home Park","owner":"Monroe / Hellman","total":248300.0},"El Rancho / Karma":{"state":"CA","type":"Mobile Home Park","owner":"Monroe / Hellman","total":209950.0},"Pioneer / Milana 2":{"state":"CA","type":"Mobile Home Park","owner":"Monroe","total":197250.0},"Mountain View / KymChi":{"state":"CA","type":"Mobile Home Park","owner":"Monroe / Hellman","total":189337.5},"Orange Grove / The OG":{"state":"CA","type":"Mobile Home Park","owner":"Monroe / Hellman","total":188325.0},"Roadrunner / Milana 3":{"state":"CA","type":"Mobile Home Park","owner":"Monroe / Hellman","total":185000.0},"Air Lane / December 2nd":{"state":"CA","type":"Mobile Home Park","owner":"Monroe / Hellman","total":171500.0},"Foothill Mobile Home Park / FMHP":{"state":"CA","type":"Mobile Home Park","owner":"Monroe / Hellman","total":168000.0},"Emerald Oasis / Roseian 3":{"state":"CA","type":"Mobile Home Park","owner":"Monroe","total":157500.0},"Terra Nova / Roseian 1":{"state":"CA","type":"Mobile Home Park","owner":"Monroe","total":134000.0},"Apple Valley / Milana 1":{"state":"CA","type":"Mobile Home Park","owner":"Monroe","total":129500.0},"Rosamond / Milana 7":{"state":"CA","type":"Mobile Home Park","owner":"Monroe","total":129500.0},"Clear Skies / Malka":{"state":"CA","type":"Mobile Home Park","owner":"Monroe / Hellman","total":124250.0},"Desert Winds / Boujie":{"state":"CA","type":"Mobile Home Park","owner":"Monroe","total":108333.42},"Julia Court Cottages / Julia Court":{"state":"FL","type":"Apartment","owner":"Monroe / Hellman","total":103500.0},"Pack Rat / North Hollywood":{"state":"CA","type":"Self Storage","owner":"Monroe / Hellman / Martinez","total":96900.0},"Car Wash - Hawthorne":{"state":"CA","type":"Other","owner":"Monroe / Hellman","total":70269.53},"Sawgrass / Brickellbody":{"state":"FL","type":"Apartment","owner":"Monroe / Hellman","total":47764.0},"Sunnydale / Alarose":{"state":"FL","type":"Industrial","owner":"Monroe / Hellman","total":35907.75},"Highlander / Milana 5":{"state":"CA","type":"Mobile Home Park","owner":"Monroe","total":33000.0},"West Way / Darby 54":{"state":"CA","type":"Mobile Home Park","owner":"Monroe / Martinez","total":23044.05},"Metrolink / Milana 9":{"state":"CA","type":"Mobile Home Park","owner":"Monroe","total":21000.0},"Palm Vista / Alarose":{"state":"CA","type":"Mobile Home Park","owner":"Monroe / Hellman","total":18186.48},"Country Squire / Wendy Rose":{"state":"CA","type":"Mobile Home Park","owner":"Monroe / Hellman","total":16500.0},"AV Ranchos / Ottawa Jr":{"state":"CA","type":"Mobile Home Park","owner":"Monroe","total":7428.75},"Social House / CLP One":{"state":"FL","type":"Retail","owner":"Monroe","total":3150.0}}};
 
-const MC = '#f5a64c', HC = '#7c6af5', FLC = '#4c9ef5', CAC = '#4cc9b0';
-const fmt = n => { if(n>=1e6) return '$'+(n/1e6).toFixed(2)+'M'; if(n>=1e3) return '$'+(n/1e3).toFixed(1)+'K'; return '$'+n.toFixed(0); };
-const fmtFull = n => '$'+n.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
-const filter = yr => yr==='all' ? RAW.monthly : RAW.monthly.filter(r=>r.date.startsWith(yr));
+const MC='#f5a64c',HC='#7c6af5',FLC='#4c9ef5',CAC='#4cc9b0';
+const TC={'Apartment':'#f5a64c','Mobile Home Park':'#4cc9b0','Self Storage':'#7c6af5','Industrial':'#f56a6a','Retail':'#a8d44c','Other':'#8b949e'};
+const TT={'Apartment':'apt','Mobile Home Park':'mhp','Self Storage':'ss','Industrial':'ind','Retail':'ret','Other':'oth'};
+const fmt=n=>{if(n>=1e6)return'$'+(n/1e6).toFixed(2)+'M';if(n>=1e3)return'$'+(n/1e3).toFixed(1)+'K';return'$'+n.toFixed(0);};
+const fmtF=n=>'$'+n.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+const BT={backgroundColor:'#1c2230',borderColor:'#21293a',borderWidth:1,titleColor:'#e6edf3',bodyColor:'#8b949e',padding:10};
+const BS={x:{grid:{color:'rgba(33,41,58,0.5)'},ticks:{color:'#8b949e',font:{size:10},maxTicksLimit:14}},y:{grid:{color:'rgba(33,41,58,0.5)'},ticks:{color:'#8b949e',font:{size:10},callback:v=>fmt(v)}}};
+let CH={},AF='all',SC='total',SD=-1;
 
-let CH = {};
-const BS = {
-  x:{grid:{color:'rgba(33,41,58,0.5)'},ticks:{color:'#8b949e',font:{size:10},maxTicksLimit:14}},
-  y:{grid:{color:'rgba(33,41,58,0.5)'},ticks:{color:'#8b949e',font:{size:10},callback:v=>fmt(v)}}
-};
-const BT = {backgroundColor:'#1c2230',borderColor:'#21293a',borderWidth:1,titleColor:'#e6edf3',bodyColor:'#8b949e',padding:10};
-
-function buildStack(data) {
-  const ctx = document.getElementById('stackChart').getContext('2d');
-  if(CH.s) CH.s.destroy();
-  CH.s = new Chart(ctx, {
-    type:'bar',
-    data:{
-      labels:data.map(r=>r.date),
-      datasets:[
-        {label:'Monroe',data:data.map(r=>r.monroe),backgroundColor:MC+'bb',borderColor:MC,borderWidth:0.5,stack:'s'},
-        {label:'Hellman',data:data.map(r=>r.hellman),backgroundColor:HC+'bb',borderColor:HC,borderWidth:0.5,stack:'s'}
-      ]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{...BT,callbacks:{
-        title:i=>i[0].label,
-        label:c=>' '+c.dataset.label+': '+fmtFull(c.raw),
-        footer:items=>'Combined: '+fmtFull(items.reduce((s,i)=>s+i.raw,0))
-      }}},
-      scales:BS
-    }
-  });
+function fd(yr){
+  return{m:yr==='all'?RAW.monroe:RAW.monroe.filter(r=>r.date.startsWith(yr)),h:yr==='all'?RAW.hellman:RAW.hellman.filter(r=>r.date.startsWith(yr))};
+}
+function mg(m,h){
+  return m.map((r,i)=>({date:r.date,monroe:r.total,hellman:h[i]?h[i].total:0,fl:r.fl,ca:r.ca,by_type:{Apartment:(r.by_type.Apartment||0)+(h[i]?h[i].by_type.Apartment:0),'Mobile Home Park':(r.by_type['Mobile Home Park']||0)+(h[i]?h[i].by_type['Mobile Home Park']:0),'Self Storage':(r.by_type['Self Storage']||0)+(h[i]?h[i].by_type['Self Storage']:0),Industrial:(r.by_type.Industrial||0)+(h[i]?h[i].by_type.Industrial:0),Retail:(r.by_type.Retail||0)+(h[i]?h[i].by_type.Retail:0),Other:(r.by_type.Other||0)+(h[i]?h[i].by_type.Other:0)}}));
 }
 
-function buildDonut(data) {
-  const ctx = document.getElementById('splitDonut').getContext('2d');
-  if(CH.d) CH.d.destroy();
-  const mTotal = data.reduce((s,r)=>s+r.monroe,0);
-  const hTotal = data.reduce((s,r)=>s+r.hellman,0);
-  const grand = mTotal + hTotal;
-  CH.d = new Chart(ctx, {
-    type:'doughnut',
-    data:{labels:['Monroe','Hellman'],datasets:[{data:[mTotal,hTotal],backgroundColor:[MC+'bb',HC+'bb'],borderColor:[MC,HC],borderWidth:1.5,hoverOffset:6}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{...BT,callbacks:{label:c=>' '+c.label+': '+fmtFull(c.raw)+' ('+(c.raw/grand*100).toFixed(1)+'%)'}}}}
-  });
-  document.getElementById('donutLegend').innerHTML = [['Monroe',mTotal,MC],['Hellman',hTotal,HC]].map(([name,val,c])=>`
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div style="display:flex;align-items:center;gap:7px"><div style="width:8px;height:8px;border-radius:2px;background:${c}"></div><span style="color:#8b949e;font-size:11px">${name}</span></div>
-      <span style="font-size:12px;font-weight:600">${fmtFull(val)} <span style="color:#8b949e;font-weight:400">(${grand>0?(val/grand*100).toFixed(1):0}%)</span></span>
-    </div>`).join('');
+function updateKPIs(d){
+  const mT=d.m.reduce((s,r)=>s+r.total,0),hT=d.h.reduce((s,r)=>s+r.total,0),g=mT+hT,n=d.m.length;
+  const flT=d.m.reduce((s,r)=>s+r.fl,0),caT=d.m.reduce((s,r)=>s+r.ca,0);
+  document.getElementById('kM').textContent=fmt(mT);document.getElementById('kMpct').textContent=g>0?(mT/g*100).toFixed(1)+'% of combined':'';
+  document.getElementById('kMavg').textContent=fmt(n>0?mT/n:0);
+  document.getElementById('kH').textContent=fmt(hT);document.getElementById('kHpct').textContent=g>0?(hT/g*100).toFixed(1)+'% of combined':'';
+  document.getElementById('kHavg').textContent=fmt(n>0?hT/n:0);
+  document.getElementById('kFL').textContent=fmt(flT);document.getElementById('kFLpct').textContent=g>0?(flT/g*100).toFixed(1)+'% of total':'';
+  document.getElementById('kCA').textContent=fmt(caT);document.getElementById('kCApct').textContent=g>0?(caT/g*100).toFixed(1)+'% of total':'';
+  const last=d.m[d.m.length-1];if(last)document.getElementById('lastUpdated').textContent='Last entry: '+last.date;
 }
 
-function buildTrend(data) {
-  const ctx = document.getElementById('trendLine').getContext('2d');
-  if(CH.t) CH.t.destroy();
-  CH.t = new Chart(ctx, {
-    type:'line',
-    data:{
-      labels:data.map(r=>r.date),
-      datasets:[
-        {label:'Monroe',data:data.map(r=>r.monroe),borderColor:MC,backgroundColor:MC+'12',fill:true,tension:0.3,pointRadius:0,pointHoverRadius:4,borderWidth:2},
-        {label:'Hellman',data:data.map(r=>r.hellman),borderColor:HC,backgroundColor:HC+'12',fill:true,tension:0.3,pointRadius:0,pointHoverRadius:4,borderWidth:2}
-      ]
-    },
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...BT}},scales:BS}
-  });
-}
-
-function buildRegion(data) {
-  const ctx = document.getElementById('regionLine').getContext('2d');
-  if(CH.r) CH.r.destroy();
-  CH.r = new Chart(ctx, {
-    type:'line',
-    data:{
-      labels:data.map(r=>r.date),
-      datasets:[
-        {label:'Florida',data:data.map(r=>r.fl_total),borderColor:FLC,backgroundColor:FLC+'10',fill:true,tension:0.3,pointRadius:0,pointHoverRadius:4,borderWidth:2},
-        {label:'California',data:data.map(r=>r.ca_total),borderColor:CAC,backgroundColor:CAC+'10',fill:true,tension:0.3,pointRadius:0,pointHoverRadius:4,borderWidth:2}
-      ]
-    },
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...BT}},scales:BS}
-  });
-}
-
-function buildYearSummary() {
-  const years = ['2024','2025','2026'];
-  const labels = ['2024','2025','2026 YTD'];
-  document.getElementById('yearSummary').innerHTML = years.map((yr,i) => {
-    const rows = RAW.monthly.filter(r=>r.date.startsWith(yr));
-    const m = rows.reduce((s,r)=>s+r.monroe,0);
-    const h = rows.reduce((s,r)=>s+r.hellman,0);
-    const t = m+h;
-    return `<div class="yr-card">
-      <div class="yr-label">${labels[i]}</div>
-      <div class="yr-row"><div class="yr-name"><div class="ldot" style="background:${MC}"></div>Monroe</div><div class="yr-val" style="color:${MC}">${fmtFull(m)}</div></div>
-      <div class="yr-row"><div class="yr-name"><div class="ldot" style="background:${HC}"></div>Hellman</div><div class="yr-val" style="color:${HC}">${fmtFull(h)}</div></div>
-      <hr class="yr-divider">
-      <div class="yr-total"><span>Combined</span><span>${fmtFull(t)}</span></div>
-    </div>`;
+function buildAssetGrid(rows){
+  const g=rows.reduce((s,r)=>s+r.monroe+r.hellman,0);
+  const types=['Apartment','Mobile Home Park','Self Storage','Industrial','Retail','Other'];
+  document.getElementById('assetGrid').innerHTML=types.map(t=>{
+    const tot=rows.reduce((s,r)=>s+(r.by_type[t]||0),0);
+    if(tot===0)return'';
+    return`<div class="at-card"><div class="at-label"><div class="at-dot" style="background:${TC[t]}"></div>${t}</div><div class="at-val">${fmt(tot)}</div><div class="at-pct">${g>0?(tot/g*100).toFixed(1)+'% of total':''}</div></div>`;
   }).join('');
 }
 
-function buildTable(data) {
-  const maxM = Math.max(...data.map(r=>r.monroe));
-  const maxH = Math.max(...data.map(r=>r.hellman));
-  document.querySelector('#cmpTable tbody').innerHTML = [...data].reverse().map(r=>`
-    <tr>
-      <td><div>${r.date}</div></td>
-      <td><div style="color:${MC}">${fmtFull(r.monroe)}</div><div class="bar-bg"><div class="bar-m" style="width:${(r.monroe/maxM*100).toFixed(1)}%"></div></div></td>
-      <td><div style="color:${HC}">${fmtFull(r.hellman)}</div><div class="bar-bg"><div class="bar-h" style="width:${(r.hellman/maxH*100).toFixed(1)}%"></div></div></td>
-      <td style="text-align:right;font-weight:600">${fmtFull(r.total)}</td>
-    </tr>`).join('');
-}
+function bldStack(rows){const ctx=document.getElementById('stackChart').getContext('2d');if(CH.s)CH.s.destroy();CH.s=new Chart(ctx,{type:'bar',data:{labels:rows.map(r=>r.date),datasets:[{label:'Monroe',data:rows.map(r=>r.monroe),backgroundColor:MC+'bb',borderColor:MC,borderWidth:.5,stack:'s'},{label:'Hellman',data:rows.map(r=>r.hellman),backgroundColor:HC+'bb',borderColor:HC,borderWidth:.5,stack:'s'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...BT,callbacks:{title:i=>i[0].label,label:c=>' '+c.dataset.label+': '+fmtF(c.raw),footer:items=>'Combined: '+fmtF(items.reduce((s,i)=>s+i.raw,0))}}},scales:BS}});}
 
-function updateKPIs(data) {
-  const m = data.reduce((s,r)=>s+r.monroe,0);
-  const h = data.reduce((s,r)=>s+r.hellman,0);
-  const t = m+h;
-  const fl = data.reduce((s,r)=>s+r.fl_total,0);
-  const ca = data.reduce((s,r)=>s+r.ca_total,0);
-  document.getElementById('kpiMonroe').textContent = fmt(m);
-  document.getElementById('kpiMonroePct').textContent = t>0?(m/t*100).toFixed(1)+'% of combined':'';
-  document.getElementById('kpiMonroeAvg').textContent = fmt(data.length>0?m/data.length:0);
-  document.getElementById('kpiHellman').textContent = fmt(h);
-  document.getElementById('kpiHellmanPct').textContent = t>0?(h/t*100).toFixed(1)+'% of combined':'';
-  document.getElementById('kpiHellmanAvg').textContent = fmt(data.length>0?h/data.length:0);
-  document.getElementById('kpiFL').textContent = fmt(fl);
-  document.getElementById('kpiFLPct').textContent = t>0?(fl/t*100).toFixed(1)+'% of combined':'';
-  document.getElementById('kpiCA').textContent = fmt(ca);
-  document.getElementById('kpiFLCAPct').textContent = t>0?(ca/t*100).toFixed(1)+'% of combined':'';
-  const last = data[data.length-1];
-  if(last) document.getElementById('lastUpdated').textContent = 'Last entry: '+last.date;
-}
+function bldDonut(d){const ctx=document.getElementById('splitDonut').getContext('2d');if(CH.d)CH.d.destroy();const mT=d.m.reduce((s,r)=>s+r.total,0),hT=d.h.reduce((s,r)=>s+r.total,0),g=mT+hT;CH.d=new Chart(ctx,{type:'doughnut',data:{labels:['Monroe','Hellman'],datasets:[{data:[mT,hT],backgroundColor:[MC+'bb',HC+'bb'],borderColor:[MC,HC],borderWidth:1.5,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{...BT,callbacks:{label:c=>' '+c.label+': '+fmtF(c.raw)+' ('+(c.raw/g*100).toFixed(1)+'%)'}}}}});document.getElementById('donutLegend').innerHTML=[['Monroe',mT,MC],['Hellman',hT,HC]].map(([n,v,c])=>`<div class="dl-row"><div class="dl-name"><div style="width:8px;height:8px;border-radius:2px;background:${c}"></div>${n}</div><span class="dl-val">${fmtF(v)} <span style="color:var(--muted);font-weight:400">(${g>0?(v/g*100).toFixed(1):0}%)</span></span></div>`).join('');}
 
-function render(yr) {
-  const data = filter(yr);
-  updateKPIs(data);
-  buildStack(data);
-  buildDonut(data);
-  buildTrend(data);
-  buildRegion(data);
-  buildYearSummary();
-  buildTable(data);
-}
+function bldTrend(rows){const ctx=document.getElementById('trendLine').getContext('2d');if(CH.t)CH.t.destroy();CH.t=new Chart(ctx,{type:'line',data:{labels:rows.map(r=>r.date),datasets:[{label:'Monroe',data:rows.map(r=>r.monroe),borderColor:MC,backgroundColor:MC+'12',fill:true,tension:.3,pointRadius:0,pointHoverRadius:4,borderWidth:2},{label:'Hellman',data:rows.map(r=>r.hellman),borderColor:HC,backgroundColor:HC+'12',fill:true,tension:.3,pointRadius:0,pointHoverRadius:4,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...BT}},scales:BS}});}
 
-document.querySelectorAll('.year-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.year-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    render(btn.dataset.year);
-  });
-});
+function bldAssetLine(rows){const ctx=document.getElementById('assetLine').getContext('2d');if(CH.a)CH.a.destroy();const types=['Apartment','Mobile Home Park','Self Storage','Industrial','Retail','Other'];CH.a=new Chart(ctx,{type:'line',data:{labels:rows.map(r=>r.date),datasets:types.map(t=>({label:t,data:rows.map(r=>r.by_type[t]||0),borderColor:TC[t],backgroundColor:TC[t]+'10',fill:false,tension:.3,pointRadius:0,pointHoverRadius:4,borderWidth:2}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...BT}},scales:BS}});}
 
+function bldRegion(d){const ctx=document.getElementById('regionLine').getContext('2d');if(CH.r)CH.r.destroy();CH.r=new Chart(ctx,{type:'line',data:{labels:d.m.map(r=>r.date),datasets:[{label:'Florida',data:d.m.map(r=>r.fl),borderColor:FLC,backgroundColor:FLC+'10',fill:true,tension:.3,pointRadius:0,pointHoverRadius:4,borderWidth:2},{label:'California',data:d.m.map(r=>r.ca),borderColor:CAC,backgroundColor:CAC+'10',fill:true,tension:.3,pointRadius:0,pointHoverRadius:4,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...BT}},scales:BS}});}
+
+function bldYearCards(){const yrs=[['2024','2024'],['2025','2025'],['2026','2026 YTD']];document.getElementById('yrCards').innerHTML=yrs.map(([yr,lbl])=>{const m=RAW.monroe.filter(r=>r.date.startsWith(yr)).reduce((s,r)=>s+r.total,0);const h=RAW.hellman.filter(r=>r.date.startsWith(yr)).reduce((s,r)=>s+r.total,0);return`<div class="yr-card"><div class="yr-label">${lbl}</div><div class="yr-row"><div class="yr-name"><span class="yr-dot" style="background:${MC}"></span>Monroe</div><div class="yr-val" style="color:${MC}">${fmtF(m)}</div></div><div class="yr-row"><div class="yr-name"><span class="yr-dot" style="background:${HC}"></span>Hellman</div><div class="yr-val" style="color:${HC}">${fmtF(h)}</div></div><hr class="yr-div"><div class="yr-total"><span>Combined</span><span>${fmtF(m+h)}</span></div></div>`;}).join('');}
+
+function bldPropFilters(){const fs=[{k:'all',l:'All'},{k:'FL',l:'Florida'},{k:'CA',l:'California'},{k:'Apartment',l:'Apartment'},{k:'Mobile Home Park',l:'Mobile Home Park'},{k:'Self Storage',l:'Self Storage'},{k:'Industrial',l:'Industrial'},{k:'Retail',l:'Retail'},{k:'Other',l:'Other'}];document.getElementById('propFilters').innerHTML=fs.map(f=>`<button class="pf-btn${f.k==='all'?' active':''}" data-filter="${f.k}">${f.l}</button>`).join('');document.querySelectorAll('.pf-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.pf-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');AF=b.dataset.filter;bldPropTable();});});}
+
+function bldPropTable(){let props=Object.entries(RAW.props).filter(([n,p])=>AF==='all'?true:AF==='FL'||AF==='CA'?p.state===AF:p.type===AF);props.sort(([an,ap],[bn,bp])=>{let av=SC==='name'?an:SC==='total'?ap.total:ap[SC];let bv=SC==='name'?bn:SC==='total'?bp.total:bp[SC];return typeof av==='string'?SD*(av.localeCompare(bv)):SD*(av-bv);});const maxT=Math.max(...props.map(([,p])=>p.total));document.getElementById('propBody').innerHTML=props.map(([name,p])=>`<tr><td><div style="font-weight:500">${name}</div></td><td><span class="tag tag-${p.state.toLowerCase()}">${p.state}</span></td><td><span class="tag tag-${TT[p.type]||'oth'}">${p.type}</span></td><td style="color:var(--muted);font-size:11px">${p.owner}</td><td style="text-align:right"><div style="font-weight:600">${fmtF(p.total)}</div><div class="bar-bg" style="min-width:80px"><div class="bar-fill" style="width:${(p.total/maxT*100).toFixed(1)}%;background:${TC[p.type]}"></div></div></td></tr>`).join('');}
+
+function bldMonthTable(rows){const mM=Math.max(...rows.map(r=>r.monroe)),mH=Math.max(...rows.map(r=>r.hellman));document.getElementById('monthBody').innerHTML=[...rows].reverse().map(r=>`<tr><td style="font-weight:500">${r.date}</td><td><div style="color:${MC};font-weight:600">${fmtF(r.monroe)}</div><div class="bar-bg"><div class="bar-fill" style="width:${(r.monroe/mM*100).toFixed(1)}%;background:${MC}"></div></div></td><td><div style="color:${HC};font-weight:600">${fmtF(r.hellman)}</div><div class="bar-bg"><div class="bar-fill" style="width:${(r.hellman/mH*100).toFixed(1)}%;background:${HC}"></div></div></td><td style="text-align:right;font-weight:600">${fmtF(r.monroe+r.hellman)}</td></tr>`).join('');}
+
+document.querySelectorAll('#propTable th[data-col]').forEach(th=>{th.addEventListener('click',()=>{if(SC===th.dataset.col)SD*=-1;else{SC=th.dataset.col;SD=-1;}document.querySelectorAll('#propTable th').forEach(t=>t.classList.remove('sorted'));th.classList.add('sorted');bldPropTable();});});
+
+function render(yr){const d=fd(yr);const rows=mg(d.m,d.h);updateKPIs(d);buildAssetGrid(rows);bldStack(rows);bldDonut(d);bldTrend(rows);bldAssetLine(rows);bldRegion(d);bldYearCards();bldPropTable();bldMonthTable(rows);}
+
+bldPropFilters();
+document.querySelectorAll('.year-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.year-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render(btn.dataset.year);});});
 render('all');
 </script>
 </body>
